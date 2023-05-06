@@ -1,0 +1,562 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lora', sans-serif;
+    list-style: none;
+    text-decoration: none;
+    color: #013f4e;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: url(../img/quran.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    overflow-x: hidden;
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    background-color: #B39375;
+    width: 50px;
+    height: 50px;
+    border-radius: 100vmax;
+    transform: translateX(500%);
+    border: 0;
+    transition: 0.3s;
+    z-index: 9999;
+    display: grid;
+    place-items: center;
+}
+
+.back-to-top i {
+    color: #E4E2DB;
+    font-size: 40px;
+    transform: scaleX(-1);
+}
+
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #013f4e;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+}
+
+.loading img {
+    width: 100px;
+    height: 100px;
+}
+
+.loading h2 {
+    margin-top: 10px;
+    color: #B39375;
+}
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+}
+
+.lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin: 8px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+i,
+p {
+    color: inherit;
+}
+
+a,
+button {
+    cursor: pointer;
+}
+
+.overlay {
+    width: 100%;
+    min-height: 100vh;
+    background: #013f4ed1;
+}
+
+.padding-x {
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+nav {
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    transition: 0.3s;
+    padding-top: 10px;
+    padding-bottom: 60px;
+    background-color: #013f4e;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+}
+
+
+nav .logo h1 {
+    color: #B39375;
+    display: flex;
+    place-items: center;
+    font-family: 'Carter One', cursive;
+    font-size: 35px;
+}
+
+nav .logo h1 img {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+nav .search {
+    width: 250px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+nav .search input {
+    width: 80%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 10px;
+    background-color: #E4E2DB;
+    border-radius: 100vmax 0 0 100vmax;
+}
+
+nav .search button {
+    width: 20%;
+    border-radius: 0 100vmax 100vmax 0;
+    border: 0;
+    background-color: #B39375;
+    color: #E4E2DB;
+    font-size: 20px;
+    height: 100%;
+}
+
+.daily-verse {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: #B39375;
+    text-align: center;
+    color: #E4E2DB;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.daily-verse h3 {
+    margin-bottom: 10px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 50px;
+}
+
+.container h2 {
+    color: #E4E2DB;
+    text-align: center;
+    margin: 20px;
+    font-weight: 900;
+}
+
+.container main ul.chapters {
+    width: 100%;
+}
+
+.container main ul.chapters li {
+    width: 100%;
+    height: 60px;
+    background-color: #e4e2db88;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    font-size: 20px;
+    box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
+    overflow: hidden;
+}
+
+.container main ul.chapters li p {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    padding: 0 20px;
+    transition: 0.3s ease;
+    width: calc(100% - 200px);
+}
+
+.container main ul.chapters li p:last-of-type {
+    flex-direction: column;
+    justify-content: center;
+    color: #99583B;
+    background-color: #E4E2DB;
+    height: 100%;
+    width: 200px;
+    font-size: 20px;
+}
+
+.container main ul.chapters li p:last-of-type span {
+
+    font-size: 14px;
+}
+
+.container main ul.chapters li p:first-of-type span {
+    margin-right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 100vmax;
+    display: grid;
+    place-content: center;
+    background-color: #E4E2DB;
+    color: #013f4e;
+    transition: 0.3s ease;
+}
+
+.container main ul.chapters li:hover p:last-of-type {
+    background-color: #B39375;
+}
+
+.container main ul.chapters li:hover p:first-of-type span {
+    background-color: #B39375;
+}
+
+.container main ul.chapters li:hover p span {
+    color: #E4E2DB;
+}
+
+.container aside :is(.today, .prayer-date) {
+    background-color: #E4E2DB;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.container aside .today div {
+    width: 100%;
+    height: calc(100% / 3);
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.container aside .today div:not(:last-child) {
+    border-bottom: 1px solid #C9BFB7;
+}
+
+.container aside .today #clock p:first-of-type {
+    font-family: 'Bruno Ace', cursive;
+    font-size: 30px;
+}
+
+.container aside .today h3 {
+    color: #99583B;
+}
+
+.container aside .prayer-date {
+    align-items: flex-start;
+}
+
+.container aside .prayer-sticky {
+    position: sticky;
+    top: calc(50vh - 145px);
+}
+
+.container aside .prayer-date ul {
+    width: 100%;
+}
+
+.container aside .prayer-date ul li {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.container aside .prayer-date h4 {
+    text-align: center;
+    color: #99583B;
+    width: 100%;
+}
+
+.container aside .prayer-date ul li span:first-child {
+    font-size: 18px;
+    color: #99583B;
+}
+
+.container aside .prayer-date ul li:not(:last-of-type) {
+    border-bottom: 1px solid #C9BFB7;
+}
+
+/* CHAPTER.HTML */
+
+.container main .chapter-name {
+    color: #E4E2DB;
+    font-size: 30px;
+    margin: 30px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.container main .chapter-name span {
+    display: block;
+    color: #99583B;
+}
+
+.container main .chapter-info {
+    background-color: #B39375;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.container main .chapter-info p {
+    flex: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    border-top: 1px solid #C9BFB7;
+    font-size: 18px;
+    color: #E4E2DB;
+}
+
+.container main .chapter-info :is(p:first-child, p:nth-child(2)) {
+    border-top: none;
+}
+
+.container main .chapter-info p:nth-child(even) {
+    border-left: 1px solid #C9BFB7;
+}
+
+.container main .chapter-info p span {
+    color: #99583B;
+    margin-right: 10px;
+}
+
+.container main .starting {
+    font-size: 50px;
+    text-align: center;
+    color: #B39375;
+    margin: 10px 0;
+}
+
+.container main .chapter {
+    display: flex;
+    flex-direction: column;
+    row-gap: 5px;
+}
+
+.container main .chapter li {
+    background-color: #E4E2DB;
+    border-radius: 5px;
+    display: flex;
+    border: 1px solid #99583B;
+}
+
+.container main .chapter li span {
+    width: 50px;
+    display: grid;
+    place-content: center;
+    color: #E4E2DB;
+    background-color: #99583B;
+    padding: 10px;
+}
+
+.container main .chapter li .chapter-text {
+    width: calc(100% - 50px);
+}
+
+.container main .chapter li .chapter-text p {
+    font-size: 18px;
+    padding: 10px;
+}
+
+.container main .chapter li .chapter-text p:first-child {
+    font-size: 25px;
+    width: 100%;
+    background-color: #B39375;
+    color: #E4E2DB;
+}
+
+.container main .chapter li .chapter-text p:first-child.name a {
+    font-size: 18px;
+    color: #E4E2DB;
+}
+
+.container main .chapter li .audio {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    background-color: #C9BFB7;
+}
+
+.container main .chapter li .audio audio {
+    width: 100%;
+    height: 50px;
+    background-color: #C9BFB7;
+    border-radius: 0
+}
+
+.container main .chapter li .audio audio::-webkit-media-controls-panel {
+    background-color: #C9BFB7;
+    border-radius: 0;
+}
+
+.search-result li {
+    color: #E4E2DB;
+}
+
+.not-found {
+    width: 100%;
+    height: 300px;
+    display: grid;
+    place-content: center;
+}
+
+.not-found h1 {
+    color: #B39375;
+    text-align: center;
+}
+
+.not-found h1 span {
+    color: #99583B;
+}
+
+footer {
+    background-color: #013f4e;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+footer h4 {
+    text-align: center;
+    color: #B39375;
+}
+
+footer ul a li {
+    color: #C9BFB7;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+footer ul {
+    display: flex;
+    justify-content: center;
+}
+
+@media screen and (max-width: 1024px) {
+    .padding-x {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
+
+@media screen and (max-width: 926px) {
+    .padding-x {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .padding-x {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .container aside.chapter-page {
+        display: none;
+    }
+
+    .daily-verse.chapter-page {
+        display: none;
+    }
+
+    nav .search {
+        width: 200px;
+    }
+
+    .container main ul.chapters li p {
+        width: calc(100% - 150px);
+    }
+
+    .container main ul.chapters li p:last-of-type {
+        width: 150px;
+    }
+
+    .container main .chapter-info p {
+        font-size: 12px;
+    }
+
+}
