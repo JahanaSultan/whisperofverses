@@ -4,6 +4,7 @@ import Footer from './Footer';
 import Main from './Main';
 import './assets/css/style.css';
 import Aside from './Aside';
+import Chapter from './Chapter';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <div className="container padding-x">
       <Routes>
         <Route path='/' element={<Main/>} />
+        <Route path='/chapter/:id' element={<Chapter/>} />
       </Routes>
       <Aside/>
       </div>

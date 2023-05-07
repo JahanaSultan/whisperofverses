@@ -1,6 +1,7 @@
 import React from 'react'
 import quran from './assets/img/quran.svg'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
 
@@ -19,11 +20,11 @@ const Header = () => {
     return (
         <>
             <nav className="padding-x">
-                <a href="index.html">
+                <Link to="/">
                     <div className="logo">
                         <h1>WoV<img src={quran} alt="logosvg" /></h1>
                     </div>
-                </a>
+                </Link>
                 <form className="search">
                     <input type="search" name="search" />
                     <button type="submit"><i className="ri-search-line"></i></button>
