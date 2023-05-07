@@ -5,6 +5,7 @@ import Main from './Main';
 import './assets/css/style.css';
 import Aside from './Aside';
 import Chapter from './Chapter';
+import Search from './Search';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Main/>} />
         <Route path='/chapter/:id' element={<Chapter/>} />
+        <Route path='/search/:query' element={<Search/>} />
       </Routes>
       <Aside/>
       </div>
