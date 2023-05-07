@@ -9,37 +9,31 @@ const Chapter = () => {
     const [verses, setVerses] = useState([])
     const [verses_ar, setVerses_ar] = useState([])
     const [audios, setAudios] = useState([])
+    const [loading, setLoading] = useState(true)
 
-    const quran_info = async () => {
-        const response = await fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-chapter-info.json')
-        const data = await response.json()
-        const chapter = data.quran.find(chapter => chapter.chapter === Number(id))
-        setchapterinfo(chapter)
+    const loadDatas = async () => {
+        try {
+            const [info, ar, az, audio] = await Promise.all([
+                fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-chapter-info.json').then(res => res.json()),
+                fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-ar.json`).then(res => res.json()),
+                fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`).then(res => res.json()),
+                fetch(`http://api.alquran.cloud/v1/surah/${id}/ar.alafasy`).then(res => res.json())
+            ]);
+            setchapterinfo(info.quran.find(chapter => chapter.chapter === Number(id)))
+            setVerses(az.quran.filter(chapter => chapter.chapter === Number(id)))
+            setVerses_ar(ar.quran.filter(chapter => chapter.chapter === Number(id)))
+            setAudios(audio.data.ayahs)
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+
+        }
     }
 
-    const quran_az = async () => {
-        const response = await fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`)
-        const data = await response.json()
-        setVerses(data.quran.filter(chapter => chapter.chapter === Number(id)))
-    }
-
-    const quran_ar = async () => {
-        const response = await fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-ar.json`)
-        const data = await response.json()
-        setVerses_ar(data.quran.filter(chapter => chapter.chapter === Number(id)))
-    }
-
-    const quran_audio = async () => {
-        const response = await fetch(`http://api.alquran.cloud/v1/surah/${id}/ar.alafasy`)
-        const data = await response.json()
-        setAudios(data.data.ayahs)
-    }
 
     useEffect(() => {
-        quran_info()
-        quran_az()
-        quran_ar()
-        quran_audio()
+        loadDatas()
     })
 
     return (
@@ -55,6 +49,7 @@ const Chapter = () => {
             <ul className="chapter">
                 {verses?.map((verse, index) => (<Verse key={verse.verse} verse={verse.verse} verse_az={verse.text} verse_ar={verses_ar[index].text} audio={audios[index]?.audio} />))}
             </ul>
+            {loading && <Loading />}
         </main>
     )
 }

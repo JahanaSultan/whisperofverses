@@ -1,11 +1,11 @@
+import quran from './assets/img/quran.svg'
+
 const Loading = () => {
     return (
-        <div class="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
+        <div className="loading">
+        <img src={quran} alt=""/>
+        <h2>Yüklənir...</h2>
+    </div>
     )
 }
 
