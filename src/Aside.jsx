@@ -12,25 +12,40 @@ const Aside = () => {
   const [hijri, setHijri] = useState("")
   const [weekday, setWeekday] = useState("")
 
-  useEffect(() => {
-    const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            currentCity(position.coords.longitude, position.coords.latitude)
-            getPrayTime(position.coords.longitude, position.coords.latitude)
-          },
-          error => {
-            setError(error.message);
-          }
-        );
-      } else {
-        setError("Brauzeriniz Lokasiya xidmətini dəstəkləmir");
-      }
-    };
 
+  const getLocation = () => {
+    console.log('getLocation')
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          currentCity(position.coords.longitude, position.coords.latitude)
+          getPrayTime(position.coords.longitude, position.coords.latitude)
+        },
+        error => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setError('Lokasiya məlumatlarına icazə verilmədi. İcazə vermək üçün brauzer ayarlarından dəyişiklik edin.');
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setError('Lokasiya məlumatları mövcud deyil.');
+              break;
+            case error.TIMEOUT:
+              setError('Lokasiya məlumatlarına gətirmə müddəti bitdi.');
+              break;
+            default:
+              setError('Bilinməyən bir səhv baş verdi.');
+              break;
+          }
+        }
+      );
+    } else {
+      setError("Brauzeriniz Lokasiya xidmətini dəstəkləmir");
+    }
+  };
+
+  useEffect(() => {
     getLocation();
-  }, []);
+  });
 
 
   const currentCity = async (long, lat) => {
@@ -90,7 +105,7 @@ const Aside = () => {
       <div className="prayer-sticky">
         <h2>Namaz Vaxtları</h2>
         <div className="prayer-date">
-          {error ? (<h4 id="location">{error}</h4>) : (
+          {error ? (<h4 id="location" >{error}</h4>) : (
             <>
               <h4 id="location">{city}, {country}</h4>
               <ul>
