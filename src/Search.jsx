@@ -14,7 +14,7 @@ const Search = () => {
                 fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`).then(res => res.json()),
                 fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-chapter-info.json`).then(res => res.json())
             ]);
-            const filteredVerses = word.quran.filter(verse => verse.text.includes(query))
+            const filteredVerses = word.quran.filter(verse => verse.text.toLowerCase().includes(query.toLocaleLowerCase()))
             setSearch(filteredVerses)
             const chapterNames = filteredVerses.map(verse => chapterInfo.quran.find(chapter => chapter.chapter === Number(verse.chapter)).name_az)
             setNames(chapterNames)

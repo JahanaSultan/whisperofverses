@@ -284,7 +284,6 @@ nav .search button {
     height: 100%;
     width: 200px;
     font-size: 20px;
-    font-family: "Droid Arabic Kufi";
 }
 
 .container main ul.chapters li p:last-of-type span {
@@ -487,7 +486,6 @@ nav .search button {
     width: 100%;
     background-color: #B39375;
     color: #E4E2DB;
-    font-family: "Droid Arabic Kufi";
 }
 
 .container main .chapter li .chapter-text > div:first-child.name a {
