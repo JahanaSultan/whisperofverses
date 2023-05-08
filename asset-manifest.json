@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.4a363a49.css",
-    "main.js": "/static/js/main.ff9a8933.js",
+    "main.js": "/static/js/main.a7daf267.js",
     "static/media/FreeSans.ttf": "/static/media/FreeSans.028215fb03f453e38eed.ttf",
     "static/media/quran.jpg": "/static/media/quran.05f934cbf41635b578ce.jpg",
     "static/media/Droid_Arabic_Kufi.ttf": "/static/media/Droid_Arabic_Kufi.475efa448565fa19578b.ttf",
@@ -9,10 +9,10 @@
     "static/media/quran.svg": "/static/media/quran.2e77e9740c7f09943f5eacffd0ac3874.svg",
     "index.html": "/index.html",
     "main.4a363a49.css.map": "/static/css/main.4a363a49.css.map",
-    "main.ff9a8933.js.map": "/static/js/main.ff9a8933.js.map"
+    "main.a7daf267.js.map": "/static/js/main.a7daf267.js.map"
   },
   "entrypoints": [
     "static/css/main.4a363a49.css",
-    "static/js/main.ff9a8933.js"
+    "static/js/main.a7daf267.js"
   ]
 }
