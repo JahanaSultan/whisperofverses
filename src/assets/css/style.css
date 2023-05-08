@@ -432,19 +432,19 @@ nav .search button {
     width: calc(100% - 50px);
 }
 
-.container main .chapter li .chapter-text p {
+.container main .chapter li .chapter-text div:not(.audio) {
     font-size: 18px;
     padding: 10px;
 }
 
-.container main .chapter li .chapter-text p:first-child {
+.container main .chapter li .chapter-text > div:first-child {
     font-size: 25px;
     width: 100%;
     background-color: #B39375;
     color: #E4E2DB;
 }
 
-.container main .chapter li .chapter-text p:first-child.name a {
+.container main .chapter li .chapter-text > div:first-child.name a {
     font-size: 18px;
     color: #E4E2DB;
 }

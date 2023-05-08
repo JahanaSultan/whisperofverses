@@ -31,11 +31,9 @@ const Chapter = () => {
         }
     }
 
-
     useEffect(() => {
         loadDatas()
     })
-
     return (
         <main>
             <h1 className="chapter-name">{chapterinfo?.name_az} <span>({chapterinfo?.name_ar})</span></h1>
