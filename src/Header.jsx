@@ -1,7 +1,7 @@
 import React from 'react'
 import quran from './assets/img/quran.svg'
 import { useEffect, useState } from 'react'
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
@@ -19,8 +19,8 @@ const Header = () => {
     }, []);
 
     const handleSearch = () => {
-        navigate(`/search/${search}`)
-      }
+        search.trim() && navigate(`/search/${search}`)
+    }
 
 
     return (

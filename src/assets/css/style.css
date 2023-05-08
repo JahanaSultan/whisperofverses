@@ -1,8 +1,23 @@
+@font-face {
+    font-family: 'Helvetica';
+    src: url(../font/FreeSans.ttf);
+}
+
+@font-face {
+    font-family: "Bruno Ace SC";
+    src: url(../font/BrunoAceSC-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Droid Arabic Kufi";
+    src: url(../font/Droid_Arabic_Kufi.ttf);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Lora', sans-serif;
+    font-family: 'Helvetica';
     list-style: none;
     text-decoration: none;
     color: #013f4e;
@@ -206,6 +221,20 @@ nav .search button {
     grid-template-columns: 3fr 1fr;
     gap: 50px;
 }
+.container .filter input{
+    width: 100%;
+    height: 40px;
+    outline: 0;
+    border-radius: 5px;
+    border: 1px solid #C9BFB7;
+    background-color: #e4e2db88;
+    padding: 10px;
+    font-size: 18px;
+}
+.container .filter input::placeholder{
+    color: #013f4e;
+    font-size: 14px;
+}
 
 .container h2 {
     color: #E4E2DB;
@@ -251,6 +280,7 @@ nav .search button {
     height: 100%;
     width: 200px;
     font-size: 20px;
+    font-family: "Droid Arabic Kufi";
 }
 
 .container main ul.chapters li p:last-of-type span {
@@ -307,7 +337,7 @@ nav .search button {
 }
 
 .container aside .today #clock p:first-of-type {
-    font-family: 'Bruno Ace', cursive;
+    font-family: 'Bruno Ace SC', cursive;
     font-size: 30px;
 }
 
@@ -364,6 +394,7 @@ nav .search button {
 .container main .chapter-name span {
     display: block;
     color: #99583B;
+    font-family: "Droid Arabic Kufi";
 }
 
 .container main .chapter-info {
@@ -400,10 +431,11 @@ nav .search button {
 }
 
 .container main .starting {
-    font-size: 50px;
+    font-size: 30px;
     text-align: center;
     color: #B39375;
     margin: 10px 0;
+    font-family: "Droid Arabic Kufi";
 }
 
 .container main .chapter {
@@ -438,10 +470,11 @@ nav .search button {
 }
 
 .container main .chapter li .chapter-text > div:first-child {
-    font-size: 25px;
+    font-size: 20px;
     width: 100%;
     background-color: #B39375;
     color: #E4E2DB;
+    font-family: "Droid Arabic Kufi";
 }
 
 .container main .chapter li .chapter-text > div:first-child.name a {

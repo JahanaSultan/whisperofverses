@@ -27,7 +27,6 @@ const Chapter = () => {
             console.error(error);
         } finally {
             setLoading(false);
-
         }
     }
 
