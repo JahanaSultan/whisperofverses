@@ -35,7 +35,7 @@ const Search = () => {
                 {search?.map((verse, index) => (
                     <Verse key={index} verse={verse.verse} verse_az={
                         <div dangerouslySetInnerHTML={{__html: verse.text.replace(new RegExp(query, "gi"), '<mark>$&</mark>')}} />
-                    } chapter_name={`${names[index]} surəsi`} chapter={verse.chapter} />
+                    } chapter_name={`${names[index]} surəsi`} chapter={verse.chapter} search={true} />
                 ))}
             </ul>
             {loading && <Loading />}

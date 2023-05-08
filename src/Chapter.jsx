@@ -44,7 +44,7 @@ const Chapter = () => {
             </div>
             <p className="starting">{chapterinfo?.bismillah_pre}</p>
             <ul className="chapter">
-                {verses?.map((verse, index) => (<Verse key={verse.verse} verse={verse.verse} verse_az={verse.text} verse_ar={verses_ar[index].text} audio={audios[index]?.audio} />))}
+                {verses?.map((verse, index) => (<Verse key={verse.verse} verse={verse.verse} verse_az={verse.text} verse_ar={verses_ar[index].text} audio={audios[index]?.audio} chapter={chapterinfo?.name_az} />))}
             </ul>
             {loading && <Loading />}
         </main>

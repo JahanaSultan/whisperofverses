@@ -463,8 +463,14 @@ nav .search button {
     background-color: #99583B;
     padding: 10px;
 }
+.container main .chapter li span:nth-of-type(2) {
+    cursor: pointer;
+}
 
 .container main .chapter li .chapter-text {
+    width: calc(100% - 100px);
+}
+.container main .chapter li .chapter-text.search {
     width: calc(100% - 50px);
 }
 
