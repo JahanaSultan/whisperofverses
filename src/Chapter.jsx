@@ -14,7 +14,7 @@ const Chapter = () => {
     const loadDatas = async () => {
         try {
             const [info, ar, az, audio] = await Promise.all([
-                fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-chapter-info.json').then(res => res.json()),
+                fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json').then(res => res.json()),
                 fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-ar.json`).then(res => res.json()),
                 fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`).then(res => res.json()),
                 fetch(`https://api.alquran.cloud/v1/surah/${id}/ar.alafasy`).then(res => res.json())

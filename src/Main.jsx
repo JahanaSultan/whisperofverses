@@ -9,7 +9,7 @@ const Main = () => {
   const [loading, setLoading] = useState(true)
 
   const chaptersName = async () => {
-    const response = await fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-chapter-info.json')
+    const response = await fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json')
     const data = await response.json()
     setChapters(data.quran)
     setChapterHolder(data.quran)
