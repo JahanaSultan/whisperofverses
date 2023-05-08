@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { useEffect } from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Main from './Main';
@@ -8,16 +9,27 @@ import Chapter from './Chapter';
 import Search from './Search';
 
 function App() {
+  const loc = useLocation();
+  const onTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }
+
+  useEffect(() => {
+    onTop()
+  }, [loc]);
   return (
     <div className='overlay'>
       <Header />
       <div className="container padding-x">
-      <Routes>
-        <Route path='/' element={<Main/>} />
-        <Route path='/chapter/:id' element={<Chapter/>} />
-        <Route path='/search/:query' element={<Search/>} />
-      </Routes>
-      <Aside/>
+        <Routes>
+          <Route path='/' element={<Main />} />
+          <Route path='/chapter/:id' element={<Chapter />} />
+          <Route path='/search/:query' element={<Search />} />
+        </Routes>
+        <Aside />
       </div>
       <Footer />
     </div>
