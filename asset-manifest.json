@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/static/css/main.6bf51334.css",
-    "main.js": "/static/js/main.73ccb4a2.js",
+    "main.css": "/static/css/main.d331a705.css",
+    "main.js": "/static/js/main.05be6425.js",
     "static/media/FreeSans.ttf": "/static/media/FreeSans.028215fb03f453e38eed.ttf",
     "static/media/quran.jpg": "/static/media/quran.05f934cbf41635b578ce.jpg",
     "static/media/Droid_Arabic_Kufi.ttf": "/static/media/Droid_Arabic_Kufi.475efa448565fa19578b.ttf",
     "static/media/BrunoAceSC-Regular.ttf": "/static/media/BrunoAceSC-Regular.2ad5677d3db64db01da0.ttf",
     "static/media/quran.svg": "/static/media/quran.2e77e9740c7f09943f5eacffd0ac3874.svg",
     "index.html": "/index.html",
-    "main.6bf51334.css.map": "/static/css/main.6bf51334.css.map",
-    "main.73ccb4a2.js.map": "/static/js/main.73ccb4a2.js.map"
+    "main.d331a705.css.map": "/static/css/main.d331a705.css.map",
+    "main.05be6425.js.map": "/static/js/main.05be6425.js.map"
   },
   "entrypoints": [
-    "static/css/main.6bf51334.css",
-    "static/js/main.73ccb4a2.js"
+    "static/css/main.d331a705.css",
+    "static/js/main.05be6425.js"
   ]
 }
