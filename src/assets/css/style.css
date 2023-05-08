@@ -34,7 +34,7 @@ body {
     overflow-x: hidden;
 }
 
-.back-to-top {
+.backtotop {
     position: fixed;
     bottom: 10px;
     right: 10px;
@@ -51,7 +51,11 @@ body {
     place-items: center;
 }
 
-.back-to-top i {
+.backtotop.translate{
+    transform: translate(0);
+}
+
+.backtotop i {
     color: #E4E2DB;
     font-size: 40px;
     transform: scaleX(-1);

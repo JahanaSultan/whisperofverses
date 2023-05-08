@@ -7,6 +7,7 @@ import './assets/css/style.css';
 import Aside from './Aside';
 import Chapter from './Chapter';
 import Search from './Search';
+import BacktoTop from './BacktoTop';
 
 function App() {
   const loc = useLocation();
@@ -31,6 +32,7 @@ function App() {
         </Routes>
         <Aside />
       </div>
+      <BacktoTop/>
       <Footer />
     </div>
   );
