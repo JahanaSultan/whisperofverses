@@ -18,8 +18,9 @@ const Verse = (props) => {
 
   return (
     <li id={`verse${props.verse}`}>
-      <span>{props.verse}.</span>
-      <div className={props.search ? "chapter-text search" : "chapter-text"}>
+      <div className="verse-top"> <span>{props.verse}.</span> {props.search ? null : (<span className='copy' onClick={copyToClipboard}><i class="ri-file-copy-line"></i></span>)}</div>
+     
+      <div className="chapter-text">
         <div class="verse-ar">{props.verse_ar ? props.verse_ar : (<Link to={`/chapter/${props.chapter}`}>{props.chapter_name} <i class="ri-arrow-right-double-line"></i></Link>)}</div>
         {props.audio ?
           (<div className="audio">
@@ -29,7 +30,6 @@ const Verse = (props) => {
           </div>) : null}
         <div className='verse-az' data-chapter={props.chapter} data-verse={props.verse}>{props.verse_az}</div>
       </div>
-      {props.search ? null : (<span className='copy' onClick={copyToClipboard}><i class="ri-file-copy-line"></i></span>)}
     </li>
   )
 }

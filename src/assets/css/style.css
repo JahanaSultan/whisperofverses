@@ -451,28 +451,31 @@ nav .search button {
 .container main .chapter li {
     background-color: #E4E2DB;
     border-radius: 5px;
-    display: flex;
     border: 1px solid #99583B;
 }
 
-.container main .chapter li span {
-    width: 50px;
-    display: grid;
-    place-content: center;
-    color: #E4E2DB;
-    background-color: #99583B;
-    padding: 10px;
-}
+
 .container main .chapter li span:nth-of-type(2) {
     cursor: pointer;
 }
 
 .container main .chapter li .chapter-text {
-    width: calc(100% - 100px);
+    width: 100%;
 }
-.container main .chapter li .chapter-text.search {
-    width: calc(100% - 50px);
+
+.container main .chapter li .verse-top{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background-color: #99583B;
+    padding: 10px;
 }
+.container main .chapter li .verse-top span{
+    font-size: 20px;
+    color:#E4E2DB
+}
+
+
 
 .container main .chapter li .chapter-text div:not(.audio) {
     font-size: 18px;
