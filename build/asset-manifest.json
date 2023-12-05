@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e6c0ea73.css",
+    "main.js": "/static/js/main.b29cd792.js",
+    "static/media/FreeSans.ttf": "/static/media/FreeSans.028215fb03f453e38eed.ttf",
+    "static/media/quran.jpg": "/static/media/quran.05f934cbf41635b578ce.jpg",
+    "static/media/Ahsing-Regular.ttf": "/static/media/Ahsing-Regular.7c9dd1991adb8b63c4ba.ttf",
+    "static/media/Droid_Arabic_Kufi.ttf": "/static/media/Droid_Arabic_Kufi.475efa448565fa19578b.ttf",
+    "static/media/BrunoAceSC-Regular.ttf": "/static/media/BrunoAceSC-Regular.2ad5677d3db64db01da0.ttf",
+    "static/media/logo.png": "/static/media/logo.40302a525942ec552a93.png",
+    "static/media/logo.svg": "/static/media/logo.4675f2c756d1c8998f93fea2fc185570.svg",
+    "index.html": "/index.html",
+    "main.e6c0ea73.css.map": "/static/css/main.e6c0ea73.css.map",
+    "main.b29cd792.js.map": "/static/js/main.b29cd792.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c0ea73.css",
+    "static/js/main.b29cd792.js"
+  ]
+}
