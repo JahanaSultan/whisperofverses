@@ -1,18 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.d331a705.css",
-    "main.js": "/static/js/main.05be6425.js",
+    "main.css": "/static/css/main.e6c0ea73.css",
+    "main.js": "/static/js/main.b29cd792.js",
     "static/media/FreeSans.ttf": "/static/media/FreeSans.028215fb03f453e38eed.ttf",
     "static/media/quran.jpg": "/static/media/quran.05f934cbf41635b578ce.jpg",
+    "static/media/Ahsing-Regular.ttf": "/static/media/Ahsing-Regular.7c9dd1991adb8b63c4ba.ttf",
     "static/media/Droid_Arabic_Kufi.ttf": "/static/media/Droid_Arabic_Kufi.475efa448565fa19578b.ttf",
     "static/media/BrunoAceSC-Regular.ttf": "/static/media/BrunoAceSC-Regular.2ad5677d3db64db01da0.ttf",
-    "static/media/quran.svg": "/static/media/quran.2e77e9740c7f09943f5eacffd0ac3874.svg",
+    "static/media/logo.png": "/static/media/logo.40302a525942ec552a93.png",
+    "static/media/logo.svg": "/static/media/logo.4675f2c756d1c8998f93fea2fc185570.svg",
     "index.html": "/index.html",
-    "main.d331a705.css.map": "/static/css/main.d331a705.css.map",
-    "main.05be6425.js.map": "/static/js/main.05be6425.js.map"
+    "main.e6c0ea73.css.map": "/static/css/main.e6c0ea73.css.map",
+    "main.b29cd792.js.map": "/static/js/main.b29cd792.js.map"
   },
   "entrypoints": [
-    "static/css/main.d331a705.css",
-    "static/js/main.05be6425.js"
+    "static/css/main.e6c0ea73.css",
+    "static/js/main.b29cd792.js"
   ]
 }
