@@ -12,6 +12,10 @@
     font-family: "Droid Arabic Kufi";
     src: url(../font/Droid_Arabic_Kufi.ttf);
 }
+@font-face {
+    font-family: "Stone";
+    src: url(../font/Ahsing-Regular.ttf);
+}
 
 * {
     margin: 0;
@@ -162,18 +166,24 @@ nav {
     box-shadow: rgba(17, 17, 26, 0.05) 0px 1px 0px, rgba(17, 17, 26, 0.1) 0px 0px 8px;
 }
 
-
-nav .logo h1 {
-    color: #B39375;
+nav .logo {
     display: flex;
-    place-items: center;
-    font-family: 'Carter One', cursive;
-    font-size: 35px;
+    align-items: center;
 }
 
-nav .logo h1 img {
-    width: 30px;
-    height: 30px;
+nav .logo h1 {
+    color: #99583B;
+    display: flex;
+    place-items: center;
+    font-family: 'Stone', cursive;
+    font-size: 35px;
+    margin-bottom: 8px;
+}
+
+nav .logo img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
     margin-left: 10px;
 }
 

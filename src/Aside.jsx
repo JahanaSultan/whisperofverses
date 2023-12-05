@@ -1,6 +1,6 @@
 import DigitalClock from './DigitalClock'
 import { useEffect, useState } from "react"
-import { month_names, hijri_months, days } from './helper'
+import { month_names, hijri_months, days, cities } from './helper'
 
 const Aside = () => {
 
@@ -92,20 +92,31 @@ const Aside = () => {
     <aside>
       <h2>Təqvim</h2>
       <div className="today">
-        <div className="hijri">
+        {hijri ? (<div className="hijri">
           <h3>Hicri</h3>
           <p>{hijri}</p>
-        </div>
+        </div>) : (null)}
+
         <DigitalClock weekday={weekday} />
-        <div className="gregorian">
+        {gregorian ? (<div className="gregorian">
           <h3>Miladi</h3>
           <p>{gregorian}</p>
-        </div>
+        </div>) : (null)}
+
       </div>
       <div className="prayer-sticky">
         <h2>Namaz Vaxtları</h2>
         <div className="prayer-date">
-          {error ? (<h4 id="location" >{error}</h4>) : (
+          {error ? (<>
+            <h4 id="location" >{error}</h4>
+            Şəhər seçin:
+            <select name="" id="">
+              {cities.sort().map((city, index) => (
+                <option key={index} value={city}>{city}</option>
+              ))}
+            </select>
+          </>
+          ) : (
             <>
               <h4 id="location">{city}, {country}</h4>
               <ul>

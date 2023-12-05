@@ -1,5 +1,5 @@
 import React from 'react'
-import quran from './assets/img/quran.svg'
+import logo from './assets/img/logo.png'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -28,7 +28,7 @@ const Header = () => {
             <nav className="padding-x">
                 <Link to="/">
                     <div className="logo">
-                        <h1>WoV<img src={quran} alt="logosvg" /></h1>
+                        <img src={logo} alt="" /> <h1>WoV</h1>
                     </div>
                 </Link>
                 <div className="search" >

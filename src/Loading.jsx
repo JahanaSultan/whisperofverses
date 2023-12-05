@@ -1,4 +1,4 @@
-import quran from './assets/img/quran.svg'
+import quran from './assets/img/logo.svg'
 
 const Loading = () => {
     return (
