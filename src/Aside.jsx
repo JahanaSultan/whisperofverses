@@ -45,7 +45,7 @@ const Aside = () => {
 
   useEffect(() => {
     getLocation();
-  });
+  }, []);
 
 
   const currentCity = async (long, lat) => {

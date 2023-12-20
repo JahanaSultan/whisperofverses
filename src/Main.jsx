@@ -27,9 +27,7 @@ const Main = () => {
 
 
   return (
-    <main>
-      
-     
+    <main> 
       <h2>Surələr</h2>
       {chapters? (<div className="filter"><input type="text" placeholder="Surə Adını Yaz..." onKeyUp={findChapter}/> </div>):null}
       <ul className="chapters">
