@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.e6c0ea73.css",
-    "main.js": "/static/js/main.fc97a61b.js",
+    "main.js": "/static/js/main.4da24cb5.js",
     "static/media/FreeSans.ttf": "/static/media/FreeSans.028215fb03f453e38eed.ttf",
     "static/media/quran.jpg": "/static/media/quran.05f934cbf41635b578ce.jpg",
     "static/media/Ahsing-Regular.ttf": "/static/media/Ahsing-Regular.7c9dd1991adb8b63c4ba.ttf",
@@ -11,10 +11,10 @@
     "static/media/logo.svg": "/static/media/logo.4675f2c756d1c8998f93fea2fc185570.svg",
     "index.html": "/index.html",
     "main.e6c0ea73.css.map": "/static/css/main.e6c0ea73.css.map",
-    "main.fc97a61b.js.map": "/static/js/main.fc97a61b.js.map"
+    "main.4da24cb5.js.map": "/static/js/main.4da24cb5.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c0ea73.css",
-    "static/js/main.fc97a61b.js"
+    "static/js/main.4da24cb5.js"
   ]
 }
