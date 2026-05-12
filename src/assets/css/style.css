@@ -71,7 +71,7 @@
 .overlay {
     width: 100%;
     min-height: 100vh;
-    background: rgba(1,63,78,.82);
+    background: rgba(1, 63, 78, 0.459);
 }
 
 /* ─── Nav ─────────────────────────────────── */
@@ -245,7 +245,7 @@ nav .search button:hover { background-color: var(--accent); }
 .container main ul.chapters li {
     width: 100%;
     height: 62px;
-    background-color: rgba(228,226,219,.88);
+    background-color: rgba(228, 226, 219, 0.661);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -255,7 +255,7 @@ nav .search button:hover { background-color: var(--accent); }
     font-size: 16px;
     box-shadow: var(--shadow-sm);
     overflow: hidden;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(2px);
 }
 
 .container main ul.chapters li:hover {
@@ -532,24 +532,6 @@ nav .search button:hover { background-color: var(--accent); }
 @keyframes shimmer {
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
-}
-
-/* ─── Equalizer bars ──────────────────────── */
-.eq-bar {
-    height: 3px;
-    animation: eq-dance 0.65s ease-in-out infinite alternate;
-}
-
-@keyframes eq-dance {
-    0%   { height: 3px;  }
-    10%  { height: 22px; }
-    22%  { height: 8px;  }
-    35%  { height: 30px; }
-    48%  { height: 14px; }
-    60%  { height: 26px; }
-    72%  { height: 6px;  }
-    85%  { height: 30px; }
-    100% { height: 4px;  }
 }
 
 /* ─── Chapter page ────────────────────────── */
