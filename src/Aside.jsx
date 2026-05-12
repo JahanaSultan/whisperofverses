@@ -1,5 +1,5 @@
 import DigitalClock from './DigitalClock'
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { month_names, hijri_months, days, cities } from './helper'
 
 const todayDate = new Date()
@@ -13,6 +13,9 @@ const Aside = () => {
   const [gregorian, setGregorian] = useState("")
   const [hijri, setHijri] = useState("")
   const [weekday, setWeekday] = useState("")
+  const [citySearch, setCitySearch] = useState(localStorage.getItem('selected_city') || "")
+  const [showCityDropdown, setShowCityDropdown] = useState(false)
+  const comboboxRef = useRef(null)
 
   const applyTimings = (timings) => {
     setPraytime({
@@ -44,6 +47,7 @@ const Aside = () => {
         applyDate(h)
         setCity(cityName)
         setCountry("Azərbaycan")
+        setCitySearch(cityName)
         return
       }
       const res = await fetch(
@@ -55,6 +59,8 @@ const Aside = () => {
       applyDate(data.date.hijri)
       setCity(cityName)
       setCountry("Azərbaycan")
+      localStorage.setItem('selected_city', cityName)
+      setCitySearch(cityName)
     } catch (err) {
       console.error(err)
     }
@@ -121,12 +127,23 @@ const Aside = () => {
               setError('Bilinməyən bir səhv baş verdi.')
           }
           applyDate(null)
+          const savedCity = localStorage.getItem('selected_city')
+          if (savedCity) fetchPrayTimeByCity(savedCity)
         }
       )
     } else {
       setError("Brauzeriniz Lokasiya xidmətini dəstəkləmir")
       applyDate(null)
     }
+  }, [])
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (comboboxRef.current && !comboboxRef.current.contains(e.target))
+        setShowCityDropdown(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
   }, [])
 
   return (
@@ -155,12 +172,30 @@ const Aside = () => {
             <>
               <h4 id="location">{error}</h4>
               <label>Şəhər seçin:
-                <select defaultValue="" onChange={(e) => fetchPrayTimeByCity(e.target.value)}>
-                  <option value="" disabled>Şəhər seçin...</option>
-                  {cities.sort().map((c, i) => (
-                    <option key={i} value={c}>{c}</option>
-                  ))}
-                </select>
+                <div className="city-combobox" ref={comboboxRef}>
+                  <input
+                    type="text"
+                    placeholder="Şəhər axtarın..."
+                    value={citySearch}
+                    onChange={(e) => { setCitySearch(e.target.value); setShowCityDropdown(true) }}
+                    onFocus={() => setShowCityDropdown(true)}
+                  />
+                  {showCityDropdown && (() => {
+                    const filtered = cities
+                      .filter(c => c.toLowerCase().includes(citySearch.toLowerCase()))
+                      .sort()
+                    return (
+                      <ul className="city-dropdown">
+                        {filtered.length > 0
+                          ? filtered.map((c, i) => (
+                              <li key={i} onMouseDown={() => { fetchPrayTimeByCity(c); setShowCityDropdown(false) }}>{c}</li>
+                            ))
+                          : <li className="no-results">Şəhər tapılmadı</li>
+                        }
+                      </ul>
+                    )
+                  })()}
+                </div>
               </label>
               {praytime && (
                 <>
@@ -179,7 +214,7 @@ const Aside = () => {
           ) : (
             <>
               <h4 id="location">{city}, {country}</h4>
-              {praytime && (
+              {praytime ? (
                 <ul>
                   <li><span>Fəcr</span><span>{praytime.fajr}</span></li>
                   <li><span>Günəş</span><span>{praytime.sunrise}</span></li>
@@ -188,6 +223,15 @@ const Aside = () => {
                   <li><span>Məğrib</span><span>{praytime.maghrib}</span></li>
                   <li><span>İşa</span><span>{praytime.isha}</span></li>
                 </ul>
+              ) : (
+                <div className="prayer-skeleton">
+                  {['Fəcr','Günəş','Zöhr','Əsr','Məğrib','İşa'].map((n) => (
+                    <div key={n} className="skeleton-row">
+                      <span className="skeleton-bar name"></span>
+                      <span className="skeleton-bar time"></span>
+                    </div>
+                  ))}
+                </div>
               )}
             </>
           )}

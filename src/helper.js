@@ -38,6 +38,8 @@ export let hijri_months = [
 
 
 export let cities=[
+    "Bakı",
+    "Gəncə",
     "Qax",
     "Zaqatala",
     "Beyləqan",

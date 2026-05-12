@@ -1,47 +1,65 @@
-import React from 'react'
-import logo from './assets/img/logo.png'
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { MessageSquareText } from "lucide-react";
+import logo from "./assets/img/logo.png";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const Header = () => {
+	const [search, setSearch] = useState("");
+	const [verse, setVerse] = useState(null);
+	const navigate = useNavigate();
 
-    const capitalize = (str) => {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-    const [search, setSearch] = useState();
-    const navigate = useNavigate();
-    const [verse, setverse] = useState();
-    useEffect(() => {
-        fetch('https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/aze-alikhanmusayev.json')
-            .then((res) => res.json())
-            .then((data) => setverse(data.quran[Math.floor(Math.random() * 6236)]))
-    }, []);
+	useEffect(() => {
+		fetch(
+			"https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/aze-alikhanmusayev.json",
+		)
+			.then((res) => res.json())
+			.then((data) => setVerse(data.quran[Math.floor(Math.random() * 6236)]));
+	}, []);
 
-    const handleSearch = () => {
-        search.trim() && navigate(`/search/${search}`)
-    }
+	const handleSearch = () => {
+		if (search.trim()) navigate(`/search/${search.trim()}`);
+	};
 
+	const handleKeyDown = (e) => {
+		if (e.key === "Enter") handleSearch();
+	};
 
-    return (
-        <>
-            <nav className="padding-x">
-                <Link to="/">
-                    <div className="logo">
-                        <img src={logo} alt="" /> <h1>WoV</h1>
-                    </div>
-                </Link>
-                <div className="search" >
-                    <input type="search" name="search" onChange={(e) => setSearch(e.target.value)} />
-                    <button type="submit" onClick={handleSearch}><i className="ri-search-line"></i></button >
-                </div>
-            </nav>
-            <div className="daily-verse padding-x">
-                <h3><i className="ri-mail-send-line"></i> Mesajınız Var!</h3>
-                <p>{verse ? (`${capitalize(verse.text)} (${verse.verse}:${verse.chapter})`) : null}</p>
-            </div>
-        </>
-    )
-}
+	const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
-export default Header
+	return (
+		<>
+			<nav className="padding-x">
+				<Link to="/">
+					<div className="logo">
+						<img src={logo} alt="WoV logo" />
+						<h1>WoV</h1>
+					</div>
+				</Link>
+				<div className="search">
+					<input
+						type="search"
+						placeholder="Ayə axtar..."
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						onKeyDown={handleKeyDown}
+					/>
+					<button type="button" onClick={handleSearch} aria-label="Axtar">
+						<i className="ri-search-line"></i>
+					</button>
+				</div>
+			</nav>
+			<div className="daily-verse padding-x">
+				<h3 className="flex items-center gap-2">
+					<MessageSquareText color={"var(--light)"} /> Qurandan Mesajınız Var
+				</h3>
+				<p>
+					{verse
+						? `${capitalize(verse.text)} (${verse.verse}:${verse.chapter})`
+						: "Yüklənir..."}
+				</p>
+			</div>
+		</>
+	);
+};
+
+export default Header;
