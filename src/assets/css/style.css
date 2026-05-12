@@ -9,14 +9,17 @@
     font-family: 'Helvetica';
     src: url(../font/FreeSans.ttf);
 }
+
 @font-face {
     font-family: "Bruno Ace SC";
     src: url(../font/BrunoAceSC-Regular.ttf);
 }
+
 @font-face {
     font-family: "Amiri Quran";
     src: url(../font/Droid_Arabic_Kufi.ttf);
 }
+
 @font-face {
     font-family: "Stone";
     src: url(../font/Ahsing-Regular.ttf);
@@ -24,18 +27,18 @@
 
 /* ─── Design tokens ───────────────────────── */
 :root {
-    --primary:    #013f4e;
-    --secondary:  #B39375;
-    --accent:     #99583B;
-    --light:      #E4E2DB;
-    --border:     #C9BFB7;
-    --shadow-sm:  0 1px 3px rgba(1,63,78,.10), 0 1px 2px rgba(1,63,78,.06);
-    --shadow-md:  0 4px 14px rgba(1,63,78,.14), 0 2px 4px rgba(1,63,78,.07);
-    --shadow-lg:  0 10px 30px rgba(1,63,78,.18), 0 4px 8px rgba(1,63,78,.10);
-    --radius:     8px;
-    --ease:       cubic-bezier(.4,0,.2,1);
-    --nav-h:      60px;
-    --bar-h:      52px;
+    --primary: #013f4e;
+    --secondary: #B39375;
+    --accent: #99583B;
+    --light: #E4E2DB;
+    --border: #C9BFB7;
+    --shadow-sm: 0 1px 3px rgba(1, 63, 78, .10), 0 1px 2px rgba(1, 63, 78, .06);
+    --shadow-md: 0 4px 14px rgba(1, 63, 78, .14), 0 2px 4px rgba(1, 63, 78, .07);
+    --shadow-lg: 0 10px 30px rgba(1, 63, 78, .18), 0 4px 8px rgba(1, 63, 78, .10);
+    --radius: 8px;
+    --ease: cubic-bezier(.4, 0, .2, 1);
+    --nav-h: 60px;
+    --bar-h: 52px;
 }
 
 /* ─── Reset ───────────────────────────────── */
@@ -50,22 +53,43 @@
         color: var(--primary);
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+        scroll-behavior: smooth;
+    }
 
     body {
         background: url(../img/quran.jpg) center/cover fixed;
         overflow-x: hidden;
     }
 
-    i, p { color: inherit; }
-    a, button { cursor: pointer; }
+    i,
+    p {
+        color: inherit;
+    }
+
+    a,
+    button {
+        cursor: pointer;
+    }
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #f0ede8; }
-::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0ede8;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
 
 /* ─── Overlay ─────────────────────────────── */
 .overlay {
@@ -86,7 +110,7 @@ nav {
     align-items: center;
     padding: 0 80px;
     background-color: var(--primary);
-    box-shadow: 0 2px 16px rgba(0,0,0,.28);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, .28);
 }
 
 nav .logo {
@@ -124,8 +148,13 @@ nav .search input {
     transition: background-color .2s var(--ease);
 }
 
-nav .search input::placeholder { color: #6b8a95; }
-nav .search input:focus { background-color: #fff; }
+nav .search input::placeholder {
+    color: #6b8a95;
+}
+
+nav .search input:focus {
+    background-color: #fff;
+}
 
 nav .search button {
     width: 44px;
@@ -139,7 +168,9 @@ nav .search button {
     transition: background-color .2s var(--ease);
 }
 
-nav .search button:hover { background-color: var(--accent); }
+nav .search button:hover {
+    background-color: var(--accent);
+}
 
 /* ─── Daily verse ─────────────────────────── */
 .daily-verse {
@@ -161,7 +192,9 @@ nav .search button:hover { background-color: var(--accent); }
     opacity: .8;
 }
 
-.daily-verse h3 i { color: inherit; }
+.daily-verse h3 i {
+    color: inherit;
+}
 
 .daily-verse p {
     color: var(--light);
@@ -184,6 +217,7 @@ nav .search button:hover { background-color: var(--accent); }
     padding-top: 28px;
     padding-bottom: 48px;
 }
+
 /* ─── Filter ──────────────────────────────── */
 .container .filter {
     position: relative;
@@ -206,7 +240,7 @@ nav .search button:hover { background-color: var(--accent); }
     outline: 0;
     border-radius: var(--radius);
     border: 1px solid var(--border);
-    background-color: rgba(228,226,219,.9);
+    background-color: rgba(228, 226, 219, .9);
     padding: 0 14px 0 40px;
     font-size: 14px;
     transition: border-color .2s var(--ease), background-color .2s var(--ease), box-shadow .2s var(--ease);
@@ -215,7 +249,7 @@ nav .search button:hover { background-color: var(--accent); }
 .container .filter input:focus {
     background-color: #fff;
     border-color: var(--secondary);
-    box-shadow: 0 0 0 3px rgba(179,147,117,.2);
+    box-shadow: 0 0 0 3px rgba(179, 147, 117, .2);
 }
 
 .container .filter input::placeholder {
@@ -250,7 +284,7 @@ nav .search button:hover { background-color: var(--accent); }
 .container main ul.chapters li:hover {
     transform: translateX(5px);
     box-shadow: var(--shadow-md);
-    background-color: rgba(228,226,219,.98);
+    background-color: rgba(228, 226, 219, .98);
 }
 
 .container main ul.chapters li p {
@@ -289,7 +323,7 @@ nav .search button:hover { background-color: var(--accent); }
     border-radius: 50%;
     display: grid;
     place-content: center;
-    background-color: rgba(1,63,78,.08);
+    background-color: rgba(1, 63, 78, .08);
     font-size: 13px;
     font-weight: 700;
     transition: background-color .2s var(--ease), color .2s var(--ease);
@@ -301,7 +335,9 @@ nav .search button:hover { background-color: var(--accent); }
     border-left-color: var(--secondary);
 }
 
-.container main ul.chapters li:hover p:last-of-type span { color: rgba(228,226,219,.75); }
+.container main ul.chapters li:hover p:last-of-type span {
+    color: rgba(228, 226, 219, .75);
+}
 
 .container main ul.chapters li:hover p:first-of-type span {
     background-color: var(--accent);
@@ -334,7 +370,9 @@ nav .search button:hover { background-color: var(--accent); }
     gap: 4px;
 }
 
-.container aside .today div:not(:last-child) { border-bottom: 1px solid var(--border); }
+.container aside .today div:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+}
 
 .container aside .today h3 {
     color: var(--accent);
@@ -357,6 +395,60 @@ nav .search button:hover { background-color: var(--accent); }
 .container aside .today #clock p:last-of-type {
     font-size: 12px;
     color: var(--secondary);
+}
+
+/* Last read verse panel */
+.container aside .last-read {
+    background-color: var(--light);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.container aside .last-read h2 {
+    color: var(--accent);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    margin: 0;
+}
+
+.container aside .last-read-link {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    text-decoration: none;
+    background-color: rgba(153, 88, 59, 0.08);
+    border: 1px solid rgba(153, 88, 59, 0.2);
+    border-radius: calc(var(--radius) - 2px);
+    padding: 10px 12px;
+    transition: background-color 0.2s;
+}
+
+.container aside .last-read-link:hover {
+    background-color: rgba(153, 88, 59, 0.16);
+}
+
+.container aside .last-read-chapter {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.container aside .last-read-ar {
+    font-size: 16px;
+    font-family: var(--font-arabic, serif);
+    color: var(--accent);
+    direction: rtl;
+}
+
+.container aside .last-read-verse {
+    font-size: 12px;
+    color: var(--secondary, #666);
+    margin-top: 2px;
 }
 
 /* Prayer sticky panel */
@@ -399,7 +491,7 @@ nav .search button:hover { background-color: var(--accent); }
 }
 
 .container aside .prayer-date ul li:not(:last-of-type) {
-    border-bottom: 1px solid rgba(201,191,183,.45);
+    border-bottom: 1px solid rgba(201, 191, 183, .45);
 }
 
 .container aside .prayer-date ul li span:first-child {
@@ -442,10 +534,15 @@ nav .search button:hover { background-color: var(--accent); }
     padding-right: 28px;
 }
 
-.container aside .prayer-date select:focus { border-color: var(--secondary); }
+.container aside .prayer-date select:focus {
+    border-color: var(--secondary);
+}
 
 /* City combobox */
-.city-combobox { position: relative; width: 100%; }
+.city-combobox {
+    position: relative;
+    width: 100%;
+}
 
 .city-combobox input {
     width: 100%;
@@ -459,8 +556,14 @@ nav .search button:hover { background-color: var(--accent); }
     transition: border-color .2s var(--ease);
 }
 
-.city-combobox input:focus { border-color: var(--secondary); }
-.city-combobox input::placeholder { color: #6b8a95; font-size: 12px; }
+.city-combobox input:focus {
+    border-color: var(--secondary);
+}
+
+.city-combobox input::placeholder {
+    color: #6b8a95;
+    font-size: 12px;
+}
 
 .city-combobox .city-dropdown {
     position: absolute;
@@ -484,7 +587,9 @@ nav .search button:hover { background-color: var(--accent); }
     transition: background-color .15s var(--ease);
 }
 
-.city-combobox .city-dropdown li:hover { background-color: var(--light); }
+.city-combobox .city-dropdown li:hover {
+    background-color: var(--light);
+}
 
 .city-combobox .city-dropdown .no-results {
     padding: 10px;
@@ -495,17 +600,21 @@ nav .search button:hover { background-color: var(--accent); }
 }
 
 /* Prayer skeleton */
-.prayer-skeleton { width: 100%; }
+.prayer-skeleton {
+    width: 100%;
+}
 
 .skeleton-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 8px 0;
-    border-bottom: 1px solid rgba(201,191,183,.4);
+    border-bottom: 1px solid rgba(201, 191, 183, .4);
 }
 
-.skeleton-row:last-child { border-bottom: none; }
+.skeleton-row:last-child {
+    border-bottom: none;
+}
 
 .skeleton-bar {
     height: 12px;
@@ -515,12 +624,22 @@ nav .search button:hover { background-color: var(--accent); }
     animation: shimmer 1.3s infinite;
 }
 
-.skeleton-bar.name { width: 48px; }
-.skeleton-bar.time { width: 38px; }
+.skeleton-bar.name {
+    width: 48px;
+}
+
+.skeleton-bar.time {
+    width: 38px;
+}
 
 @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
 }
 
 /* ─── Chapter page ────────────────────────── */
@@ -558,19 +677,21 @@ nav .search button:hover { background-color: var(--accent); }
     align-items: center;
     gap: 6px;
     padding: 8px;
-    border-top: 1px solid rgba(228,226,219,.25);
+    border-top: 1px solid rgba(228, 226, 219, .25);
     font-size: 14px;
     color: var(--light);
 }
 
-.container main .chapter-info :is(p:first-child, p:nth-child(2)) { border-top: none; }
+.container main .chapter-info :is(p:first-child, p:nth-child(2)) {
+    border-top: none;
+}
 
 .container main .chapter-info p:nth-child(even) {
-    border-left: 1px solid rgba(228,226,219,.25);
+    border-left: 1px solid rgba(228, 226, 219, .25);
 }
 
 .container main .chapter-info p span {
-    color: rgba(228,226,219,.7);
+    color: rgba(228, 226, 219, .7);
     font-size: 12px;
 }
 
@@ -605,7 +726,9 @@ nav .search button:hover { background-color: var(--accent); }
     font-size: 18px;
 }
 
-.not-found h1 span { color: var(--secondary); }
+.not-found h1 span {
+    color: var(--secondary);
+}
 
 /* ─── Back to top ─────────────────────────── */
 .backtotop {
@@ -632,7 +755,9 @@ nav .search button:hover { background-color: var(--accent); }
     opacity: 1;
 }
 
-.backtotop:hover { background-color: var(--accent); }
+.backtotop:hover {
+    background-color: var(--accent);
+}
 
 .backtotop i {
     color: var(--light);
@@ -659,8 +784,17 @@ nav .search button:hover { background-color: var(--accent); }
 }
 
 @keyframes breathe {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: .65; transform: scale(.93); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .65;
+        transform: scale(.93);
+    }
 }
 
 .loading h2 {
@@ -690,13 +824,26 @@ nav .search button:hover { background-color: var(--accent); }
     animation: spin .85s linear infinite;
 }
 
-.lds-ring div:nth-child(1) { animation-delay: -.45s; }
-.lds-ring div:nth-child(2) { animation-delay: -.3s; }
-.lds-ring div:nth-child(3) { animation-delay: -.15s; }
+.lds-ring div:nth-child(1) {
+    animation-delay: -.45s;
+}
+
+.lds-ring div:nth-child(2) {
+    animation-delay: -.3s;
+}
+
+.lds-ring div:nth-child(3) {
+    animation-delay: -.15s;
+}
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* ─── Settings slider ─────────────────────── */
@@ -709,13 +856,13 @@ nav .search button:hover { background-color: var(--accent); }
     background: #99583B;
     cursor: pointer;
     border: 2px solid #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
     transition: transform .15s var(--ease), box-shadow .15s var(--ease);
 }
 
 .settings-slider::-webkit-slider-thumb:hover {
     transform: scale(1.15);
-    box-shadow: 0 2px 8px rgba(153,88,59,.45);
+    box-shadow: 0 2px 8px rgba(153, 88, 59, .45);
 }
 
 .settings-slider::-moz-range-thumb {
@@ -725,7 +872,7 @@ nav .search button:hover { background-color: var(--accent); }
     background: #99583B;
     cursor: pointer;
     border: 2px solid #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
 }
 
 /* ─── Footer ──────────────────────────────── */
@@ -768,25 +915,57 @@ footer h4 {
     opacity: .65;
 }
 
-footer h4 i { color: inherit; }
+footer h4 i {
+    color: inherit;
+}
 
 /* ─── Responsive ──────────────────────────── */
 @media screen and (max-width: 1024px) {
-    .padding-x { padding-left: 32px; padding-right: 32px; }
-    nav { padding: 0 32px; }
-    .daily-verse { padding: 10px 32px; }
+    .padding-x {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+
+    nav {
+        padding: 0 32px;
+    }
+
+    .daily-verse {
+        padding: 10px 32px;
+    }
 }
 
 @media screen and (max-width: 768px) {
-    :root { --nav-h: 54px; --bar-h: 60px; }
+    :root {
+        --nav-h: 54px;
+        --bar-h: 60px;
+    }
 
-    .padding-x { padding-left: 14px; padding-right: 14px; }
-    nav { padding: 0 14px; }
-    nav .logo h1 { font-size: 24px; }
-    nav .search { width: 170px; height: 33px; }
+    .padding-x {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
 
-    .daily-verse { padding: 10px 14px; }
-    .daily-verse p { font-size: 13px; }
+    nav {
+        padding: 0 14px;
+    }
+
+    nav .logo h1 {
+        font-size: 24px;
+    }
+
+    nav .search {
+        width: 170px;
+        height: 33px;
+    }
+
+    .daily-verse {
+        padding: 10px 14px;
+    }
+
+    .daily-verse p {
+        font-size: 13px;
+    }
 
     .container {
         display: flex;
@@ -794,16 +973,37 @@ footer h4 i { color: inherit; }
         gap: 20px;
     }
 
-    .container aside.chapter-page { display: none; }
+    .container aside.chapter-page {
+        display: none;
+    }
 
-    .container main ul.chapters li p { width: calc(100% - 140px); }
-    .container main ul.chapters li p:last-of-type { width: 140px; font-size: 15px; }
-    .container main .chapter-info p { font-size: 13px; }
+    .container main ul.chapters li p {
+        width: calc(100% - 140px);
+    }
+
+    .container main ul.chapters li p:last-of-type {
+        width: 140px;
+        font-size: 15px;
+    }
+
+    .container main .chapter-info p {
+        font-size: 13px;
+    }
 }
 
 @media screen and (max-width: 480px) {
-    nav .search { width: 145px; }
+    nav .search {
+        width: 145px;
+    }
 
-    .container main ul.chapters li { height: 54px; font-size: 14px; }
-    .container main ul.chapters li p:first-of-type span { width: 32px; height: 32px; font-size: 12px; }
+    .container main ul.chapters li {
+        height: 54px;
+        font-size: 14px;
+    }
+
+    .container main ul.chapters li p:first-of-type span {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
 }

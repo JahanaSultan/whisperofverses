@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Verse from "./Verse";
 import Loading from "./Loading";
@@ -18,7 +18,7 @@ const fetchJSON = async (url) => {
 
 /** Build a per-verse audio URL from everyayah.com */
 const everyayahUrl = (subfolder, chapter, verse) => {
-	const ch  = String(chapter).padStart(3, "0");
+	const ch = String(chapter).padStart(3, "0");
 	const ver = String(verse).padStart(3, "0");
 	return `https://everyayah.com/data/${subfolder}/${ch}${ver}.mp3`;
 };
@@ -31,14 +31,20 @@ const Chapter = () => {
 	const [verses, setVerses] = useState([]);
 	const [audios, setAudios] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const chapterinfoRef = useRef(null);
 
-	const handleVerseEnded = useCallback((index) => {
-		if (!settings.autoPlayNext) return;
-		const nextAudio = audios[index + 1]?.audio;
-		if (nextAudio) {
-			window.dispatchEvent(new CustomEvent("audio-autoplay", { detail: nextAudio }));
-		}
-	}, [settings.autoPlayNext, audios]);
+	const handleVerseEnded = useCallback(
+		(index) => {
+			if (!settings.autoPlayNext) return;
+			const nextAudio = audios[index + 1]?.audio;
+			if (nextAudio) {
+				window.dispatchEvent(
+					new CustomEvent("audio-autoplay", { detail: nextAudio }),
+				);
+			}
+		},
+		[settings.autoPlayNext, audios],
+	);
 
 	useEffect(() => {
 		setLoading(true);
@@ -60,8 +66,12 @@ const Chapter = () => {
 				const subfolder = settings.reciterSubfolder || DEFAULT_SUBFOLDER;
 				const azVerses = az.quran.filter((v) => v.chapter === numId);
 				const arVerses = ar.quran.filter((v) => v.chapter === numId);
-				setchapterinfo(info.quran.find((c) => c.chapter === numId));
-				setVerses(azVerses.map((v, i) => ({ ...v, text_ar: arVerses[i].text })));
+				const chInfo = info.quran.find((c) => c.chapter === numId);
+				setchapterinfo(chInfo);
+				chapterinfoRef.current = chInfo;
+				setVerses(
+					azVerses.map((v, i) => ({ ...v, text_ar: arVerses[i].text })),
+				);
 				setAudios(
 					azVerses.map((v) => ({
 						audio: everyayahUrl(subfolder, numId, v.verse),
@@ -84,7 +94,8 @@ const Chapter = () => {
 			: "";
 		const fullHash = window.location.hash || "";
 		const nestedIndex = fullHash.lastIndexOf("#verse");
-		const anchorFromFullHash = nestedIndex >= 0 ? fullHash.slice(nestedIndex + 1) : "";
+		const anchorFromFullHash =
+			nestedIndex >= 0 ? fullHash.slice(nestedIndex + 1) : "";
 		const anchor = anchorFromLocation || anchorFromFullHash;
 
 		if (!anchor) return;
@@ -103,6 +114,38 @@ const Chapter = () => {
 
 		return () => window.clearInterval(intervalId);
 	}, [verses, location.hash]);
+
+	useEffect(() => {
+		if (!verses.length || !chapterinfo) return;
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						const verseNum = parseInt(entry.target.id.replace("verse", ""), 10);
+						const info = chapterinfoRef.current;
+						if (info) {
+							localStorage.setItem(
+								"last_read",
+								JSON.stringify({
+									chapterId: info.chapter,
+									chapterNameAz: info.name_az,
+									chapterNameAr: info.name_ar,
+									verse: verseNum,
+								}),
+							);
+						}
+					}
+				});
+			},
+			{ threshold: 0.5 },
+		);
+
+		const verseEls = document.querySelectorAll("li[id^='verse']");
+		verseEls.forEach((el) => observer.observe(el));
+
+		return () => observer.disconnect();
+	}, [verses, chapterinfo]);
 
 	return (
 		<main>
