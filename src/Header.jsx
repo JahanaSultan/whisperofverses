@@ -1,4 +1,4 @@
-import { MessageSquareText } from "lucide-react";
+import { MessageSquareText, Search } from "lucide-react";
 import logo from "./assets/img/logo.png";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -44,7 +44,7 @@ const Header = () => {
 						onKeyDown={handleKeyDown}
 					/>
 					<button type="button" onClick={handleSearch} aria-label="Axtar">
-						<i className="ri-search-line"></i>
+						<Search size={18} />
 					</button>
 				</div>
 			</nav>
