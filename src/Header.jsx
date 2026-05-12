@@ -48,9 +48,9 @@ const Header = () => {
 					</button>
 				</div>
 			</nav>
-			<div className="daily-verse padding-x">
-				<h3 className="flex items-center gap-2">
-					<MessageSquareText color={"var(--light)"} /> Qurandan Mesajınız Var
+			<div className="daily-verse padding-x flex flex-col items-center gap-2">
+				<h3 className="flex items-center gap-2 text-xxl font-semibold">
+					<MessageSquareText size={16} color={"var(--light)"} /> Qurandan Mesajınız Var
 				</h3>
 				<p>
 					{verse

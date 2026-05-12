@@ -1,4 +1,4 @@
-import { Copy } from "lucide-react";
+import { ArrowRight, Check, Copy } from "lucide-react";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import AudioPlayer from "./AudioPlayer";
@@ -8,9 +8,7 @@ const Verse = memo((props) => {
 		const verse_az = document.querySelectorAll(".verse-az");
 		const verse_ar = document.querySelectorAll(".verse-ar");
 		const copy = document.querySelectorAll(".copy");
-		copy.forEach(
-			(e) => (e.innerHTML = `<i class="ri-file-copy-line"></i>`),
-		);
+		copy.forEach((e) => (e.innerHTML = `<i class="ri-file-copy-line"></i>`));
 		const copyText_az = verse_az[props.verse - 1];
 		const copyText_ar = verse_ar[props.verse - 1];
 		const verseText =
@@ -23,7 +21,7 @@ const Verse = memo((props) => {
 			copyText_az.dataset.verse +
 			")";
 		navigator.clipboard.writeText(verseText);
-		copy[props.verse - 1].innerHTML = `<i class="ri-check-line"></i>`;
+		copy[props.verse - 1].innerHTML = <Check size={18} />;
 	};
 
 	return (
@@ -56,15 +54,13 @@ const Verse = memo((props) => {
 							className="text-[15px] text-[#E4E2DB] font-sans [direction:ltr] text-left flex items-center gap-1.5"
 						>
 							{props.chapter_name}{" "}
-							<i className="ri-arrow-right-double-line"></i>
+							<ArrowRight size={16} color={"var(--light)"} />
 						</Link>
 					)}
 				</div>
 
 				{/* Audio player */}
-				{props.audio ? (
-					<AudioPlayer src={props.audio} />
-				) : null}
+				{props.audio ? <AudioPlayer src={props.audio} /> : null}
 
 				{/* Azerbaijani translation */}
 				<div
