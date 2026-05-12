@@ -6,11 +6,21 @@ import { useSettings } from "./SettingsContext";
 
 const jsonCache = new Map();
 
+// Default reciter subfolder on everyayah.com (Alafasy 128kbps)
+const DEFAULT_SUBFOLDER = "Alafasy_128kbps";
+
 const fetchJSON = async (url) => {
 	if (jsonCache.has(url)) return jsonCache.get(url);
 	const promise = fetch(url).then((res) => res.json());
 	jsonCache.set(url, promise);
 	return promise;
+};
+
+/** Build a per-verse audio URL from everyayah.com */
+const everyayahUrl = (subfolder, chapter, verse) => {
+	const ch  = String(chapter).padStart(3, "0");
+	const ver = String(verse).padStart(3, "0");
+	return `https://everyayah.com/data/${subfolder}/${ch}${ver}.mp3`;
 };
 
 const Chapter = () => {
@@ -34,7 +44,7 @@ const Chapter = () => {
 		setLoading(true);
 		const loadDatas = async () => {
 			try {
-				const [info, ar, az, audio] = await Promise.all([
+				const [info, ar, az] = await Promise.all([
 					fetchJSON(
 						"https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json",
 					),
@@ -44,16 +54,19 @@ const Chapter = () => {
 					fetchJSON(
 						"https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json",
 					),
-					fetchJSON(
-						`https://api.alquran.cloud/v1/surah/${id}/ar.alafasy`,
-					),
 				]);
+
 				const numId = Number(id);
+				const subfolder = settings.reciterSubfolder || DEFAULT_SUBFOLDER;
 				const azVerses = az.quran.filter((v) => v.chapter === numId);
 				const arVerses = ar.quran.filter((v) => v.chapter === numId);
 				setchapterinfo(info.quran.find((c) => c.chapter === numId));
 				setVerses(azVerses.map((v, i) => ({ ...v, text_ar: arVerses[i].text })));
-				setAudios(audio.data.ayahs);
+				setAudios(
+					azVerses.map((v) => ({
+						audio: everyayahUrl(subfolder, numId, v.verse),
+					})),
+				);
 			} catch (error) {
 				console.error(error);
 			} finally {
@@ -61,7 +74,7 @@ const Chapter = () => {
 			}
 		};
 		loadDatas();
-	}, [id]);
+	}, [id, settings.reciterSubfolder]);
 
 	useEffect(() => {
 		if (!verses.length) return;

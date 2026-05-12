@@ -1,4 +1,5 @@
 import { Settings2, Type, Music2, RotateCcw } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { useSettings } from "./SettingsContext";
 
 const ARABIC_PREVIEW = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
@@ -55,11 +56,56 @@ const Toggle = ({ checked, onChange }) => (
 
 const Settings = () => {
 	const { settings, update } = useSettings();
+	const [reciters, setReciters] = useState([]);
+	const [recitersLoading, setRecitersLoading] = useState(false);
+	const [recitersError, setRecitersError] = useState("");
+
+	useEffect(() => {
+		const controller = new AbortController();
+		const loadReciters = async () => {
+			setRecitersLoading(true);
+			setRecitersError("");
+			try {
+				const res = await fetch("https://everyayah.com/data/recitations.js", {
+					signal: controller.signal,
+				});
+				const raw = await res.json();
+				const list = Object.entries(raw)
+					.filter(([key]) => !isNaN(Number(key)))
+					.map(([, val]) => ({
+						subfolder: val.subfolder,
+						name: val.name,
+						bitrate: val.bitrate,
+					}))
+					.sort((a, b) => a.name.localeCompare(b.name));
+				setReciters(list);
+			} catch (error) {
+				if (error.name !== "AbortError") {
+					setRecitersError("Qarilər siyahısı yüklənmədi.");
+				}
+			} finally {
+				setRecitersLoading(false);
+			}
+		};
+		loadReciters();
+		return () => controller.abort();
+	}, []);
+
+	const selectedReciterName = useMemo(() => {
+		if (!settings.reciterSubfolder) return "";
+		return (
+			reciters.find((r) => r.subfolder === settings.reciterSubfolder)?.name ??
+			settings.reciterName ??
+			""
+		);
+	}, [reciters, settings.reciterSubfolder, settings.reciterName]);
 
 	const reset = () => {
 		update("arabicSize", 28);
 		update("azSize", 14);
 		update("autoPlayNext", false);
+		update("reciterSubfolder", "");
+		update("reciterName", "");
 	};
 
 	return (
@@ -149,6 +195,42 @@ const Settings = () => {
 								onChange={(v) => update("autoPlayNext", v)}
 							/>
 						</div>
+
+						<div className="border-t border-[rgba(201,191,183,0.5)] my-4" />
+
+						{/* <div className="flex flex-col gap-2">
+							<label htmlFor="reciter" className="text-[13px] font-semibold text-[#013f4e]">
+								Qari seçimi
+							</label>
+							<select
+								id="reciter"
+								value={settings.reciterSubfolder || ""}
+								onChange={(e) => {
+									const nextSubfolder = e.target.value;
+									const found = reciters.find((r) => r.subfolder === nextSubfolder);
+									update("reciterSubfolder", nextSubfolder);
+									update("reciterName", found?.name ?? "");
+								}}
+								disabled={recitersLoading}
+								className="w-full rounded-md border border-[rgba(153,88,59,0.25)] bg-white px-3 py-2 text-[13px] text-[#013f4e] outline-none focus:border-[#99583B]"
+							>
+								<option value="">Default (Alafasy 128kbps)</option>
+								{reciters.map((reciter) => (
+									<option key={reciter.subfolder} value={reciter.subfolder}>
+										{reciter.name} — {reciter.bitrate}
+									</option>
+								))}
+							</select>
+							{recitersLoading ? (
+								<p className="text-[12px] text-[#6b8a95]">Qarilər yüklənir...</p>
+							) : null}
+							{recitersError ? (
+								<p className="text-[12px] text-[#99583B]">{recitersError}</p>
+							) : null}
+							<p className="text-[12px] text-[#6b8a95] leading-[1.6]">
+								Hazırkı seçim: {selectedReciterName || "Alafasy"}
+							</p>
+						</div> */}
 					</div>
 				</div>
 			</div>

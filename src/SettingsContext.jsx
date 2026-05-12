@@ -6,6 +6,8 @@ const defaults = {
 	arabicSize: 28,
 	azSize: 14,
 	autoPlayNext: false,
+	reciterSubfolder: "",
+	reciterName: "",
 };
 
 const load = () => {
