@@ -1,4 +1,10 @@
-import { MessageSquareText, Search, Settings } from "lucide-react";
+import {
+	ArrowRight,
+	MessageSquareText,
+	MoveRight,
+	Search,
+	Settings,
+} from "lucide-react";
 import logo from "./assets/img/logo.png";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -47,19 +53,32 @@ const Header = () => {
 						<Search size={18} />
 					</button>
 				</div>
-				<Link to="/settings" aria-label="Parametrlər" className="ml-3 flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200 hover:bg-[rgba(228,226,219,0.15)]">
+				<Link
+					to="/settings"
+					aria-label="Parametrlər"
+					className="ml-3 flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200 hover:bg-[rgba(228,226,219,0.15)]"
+				>
 					<Settings size={20} color="var(--light)" />
 				</Link>
 			</nav>
 			<div className="daily-verse padding-x flex flex-col items-center gap-2">
-				<h3 className="flex items-center gap-2 text-xxl font-semibold">
-					<MessageSquareText size={16} color={"var(--light)"} /> Qurandan Mesajınız Var
-				</h3>
-				<p>
-					{verse
-						? `${capitalize(verse.text)} (${verse.verse}:${verse.chapter})`
-						: "Yüklənir..."}
-				</p>
+				<Link
+					to={`/chapter/${verse?.chapter}#verse${verse?.verse}`}
+					className="flex items-center gap-2 text-xxl font-semibold text-(--light)"
+				>
+					<MessageSquareText size={16} color={"var(--light)"} /> Qurandan
+					Mesajınız Var <MoveRight size={20} color={"var(--light)"} />
+				</Link>
+
+				{verse ? (
+					<p className=" flex items-center gap-1">
+						<span className="text-(--light)">
+							{`${capitalize(verse.text)} (${verse.verse}:${verse.chapter})`}{" "}
+						</span>
+					</p>
+				) : (
+					"Yüklənir..."
+				)}
 			</div>
 		</>
 	);
