@@ -21,6 +21,9 @@ function App() {
   }
 
   useEffect(() => {
+    const hasVerseAnchor =
+      loc.hash?.startsWith('#verse') || /#verse\d+/.test(window.location.hash);
+    if (hasVerseAnchor) return;
     onTop()
   }, [loc]);
   return (

@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import Verse from "./Verse";
 import Loading from "./Loading";
 import { useSettings } from "./SettingsContext";
@@ -15,6 +15,7 @@ const fetchJSON = async (url) => {
 
 const Chapter = () => {
 	const { id } = useParams();
+	const location = useLocation();
 	const { settings } = useSettings();
 	const [chapterinfo, setchapterinfo] = useState(null);
 	const [verses, setVerses] = useState([]);
@@ -61,6 +62,34 @@ const Chapter = () => {
 		};
 		loadDatas();
 	}, [id]);
+
+	useEffect(() => {
+		if (!verses.length) return;
+
+		const anchorFromLocation = location.hash?.startsWith("#verse")
+			? location.hash.slice(1)
+			: "";
+		const fullHash = window.location.hash || "";
+		const nestedIndex = fullHash.lastIndexOf("#verse");
+		const anchorFromFullHash = nestedIndex >= 0 ? fullHash.slice(nestedIndex + 1) : "";
+		const anchor = anchorFromLocation || anchorFromFullHash;
+
+		if (!anchor) return;
+
+		let attempts = 0;
+		const intervalId = window.setInterval(() => {
+			const target = document.getElementById(anchor);
+			if (target) {
+				target.scrollIntoView({ behavior: "smooth", block: "center" });
+				window.clearInterval(intervalId);
+				return;
+			}
+			attempts += 1;
+			if (attempts >= 8) window.clearInterval(intervalId);
+		}, 80);
+
+		return () => window.clearInterval(intervalId);
+	}, [verses, location.hash]);
 
 	return (
 		<main>
