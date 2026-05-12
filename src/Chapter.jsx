@@ -11,28 +11,27 @@ const Chapter = () => {
     const [audios, setAudios] = useState([])
     const [loading, setLoading] = useState(true)
 
-    const loadDatas = async () => {
-        try {
-            const [info, ar, az, audio] = await Promise.all([
-                fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json').then(res => res.json()),
-                fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-ar.json`).then(res => res.json()),
-                fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`).then(res => res.json()),
-                fetch(`https://api.alquran.cloud/v1/surah/${id}/ar.alafasy`).then(res => res.json())
-            ]);
-            setchapterinfo(info.quran.find(chapter => chapter.chapter === Number(id)))
-            setVerses(az.quran.filter(chapter => chapter.chapter === Number(id)))
-            setVerses_ar(ar.quran.filter(chapter => chapter.chapter === Number(id)))
-            setAudios(audio.data.ayahs)
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
+        const loadDatas = async () => {
+            try {
+                const [info, ar, az, audio] = await Promise.all([
+                    fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json').then(res => res.json()),
+                    fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-ar.json`).then(res => res.json()),
+                    fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`).then(res => res.json()),
+                    fetch(`https://api.alquran.cloud/v1/surah/${id}/ar.alafasy`).then(res => res.json())
+                ]);
+                setchapterinfo(info.quran.find(chapter => chapter.chapter === Number(id)))
+                setVerses(az.quran.filter(chapter => chapter.chapter === Number(id)))
+                setVerses_ar(ar.quran.filter(chapter => chapter.chapter === Number(id)))
+                setAudios(audio.data.ayahs)
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
         loadDatas()
-    },[])
+    }, [id])
     return (
         <main>
             <h1 className="chapter-name">{chapterinfo?.name_az} <span>({chapterinfo?.name_ar})</span></h1>

@@ -13,8 +13,43 @@ const Aside = () => {
   const [weekday, setWeekday] = useState("")
 
 
-  const getLocation = () => {
-    console.log('getLocation')
+  useEffect(() => {
+    const currentCity = async (long, lat) => {
+      if (localStorage.getItem('city') && localStorage.getItem('country')) {
+        setCity(localStorage.getItem('city'))
+        setCountry(localStorage.getItem('country'))
+      } else {
+        const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=3e490cfc89ac4cce88823ab10ffd4c59`)
+        const data = await response.json()
+        localStorage.setItem('city', data.results[0].components.city)
+        localStorage.setItem('country', data.results[0].components.country)
+        setCity(data.results[0].components.city)
+        setCountry(data.results[0].components.country)
+      }
+    }
+
+    const getPrayTime = async (long, lat) => {
+      let today = new Date()
+      let day = today.getDate()
+      let month = today.getMonth() + 1
+      let year = today.getFullYear()
+      let weekDay = today.getDay()
+
+      const response = await fetch(`https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${long}&method=13`)
+      const data = await response.json()
+      setPraytime({
+        "fajr": data.data[day - 1].timings.Fajr.slice(0, 5),
+        "sunrise": data.data[day - 1].timings.Sunrise.slice(0, 5),
+        "dhuhr": data.data[day - 1].timings.Dhuhr.slice(0, 5),
+        "asr": data.data[day - 1].timings.Asr.slice(0, 5),
+        "maghrib": data.data[day - 1].timings.Maghrib.slice(0, 5),
+        "isha": data.data[day - 1].timings.Isha.slice(0, 5)
+      })
+      setGregorian(`${day} ${month_names[month - 1]} ${year}`)
+      setHijri(`${data.data[day].date.hijri.day} ${hijri_months[data.data[day].date.hijri.month.number - 1]} ${data.data[day].date.hijri.year}`)
+      setWeekday(days[weekDay])
+    }
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
@@ -41,50 +76,7 @@ const Aside = () => {
     } else {
       setError("Brauzeriniz Lokasiya xidmətini dəstəkləmir");
     }
-  };
-
-  useEffect(() => {
-    getLocation();
   }, []);
-
-
-  const currentCity = async (long, lat) => {
-    if (localStorage.getItem('city') && localStorage.getItem('country')) {
-      setCity(localStorage.getItem('city'))
-      setCountry(localStorage.getItem('country'))
-    }
-    else {
-      const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=3e490cfc89ac4cce88823ab10ffd4c59`)
-      const data = await response.json()
-      localStorage.setItem('city', data.results[0].components.city)
-      localStorage.setItem('country', data.results[0].components.country)
-      setCity(data.results[0].components.city)
-      setCountry(data.results[0].components.country)
-    }
-  }
-
-
-  const getPrayTime = async (long, lat) => {
-    let today = new Date()
-    let day = today.getDate()
-    let month = today.getMonth() + 1
-    let year = today.getFullYear()
-    let weekDay = today.getDay()
-
-    const response = await fetch(`https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${long}&method=13`)
-    const data = await response.json()
-    setPraytime({
-      "fajr": data.data[day - 1].timings.Fajr.slice(0, 5),
-      "sunrise": data.data[day - 1].timings.Sunrise.slice(0, 5),
-      "dhuhr": data.data[day - 1].timings.Dhuhr.slice(0, 5),
-      "asr": data.data[day - 1].timings.Asr.slice(0, 5),
-      "maghrib": data.data[day - 1].timings.Maghrib.slice(0, 5),
-      "isha": data.data[day - 1].timings.Isha.slice(0, 5)
-    })
-    setGregorian(`${day} ${month_names[month - 1]} ${year}`)
-    setHijri(`${data.data[day].date.hijri.day} ${hijri_months[data.data[day].date.hijri.month.number - 1]} ${data.data[day].date.hijri.year}`)
-    setWeekday(days[weekDay])
-  }
 
 
 
