@@ -41,25 +41,27 @@ const Header = () => {
 						<h1>WoV</h1>
 					</div>
 				</Link>
-				<div className="search">
-					<input
-						type="search"
-						placeholder="Ayə axtar..."
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-						onKeyDown={handleKeyDown}
-					/>
-					<button type="button" onClick={handleSearch} aria-label="Axtar">
-						<Search size={18} />
-					</button>
+				<div className="flex items-center gap-2">
+					<div className="search">
+						<input
+							type="search"
+							placeholder="Ayə axtar..."
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							onKeyDown={handleKeyDown}
+						/>
+						<button type="button" onClick={handleSearch} aria-label="Axtar">
+							<Search size={18} />
+						</button>
+					</div>
+					<Link
+						to="/settings"
+						aria-label="Parametrlər"
+						className="ml-3 flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200 hover:bg-[rgba(228,226,219,0.15)]"
+					>
+						<Settings size={20} color="var(--light)" />
+					</Link>
 				</div>
-				<Link
-					to="/settings"
-					aria-label="Parametrlər"
-					className="ml-3 flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200 hover:bg-[rgba(228,226,219,0.15)]"
-				>
-					<Settings size={20} color="var(--light)" />
-				</Link>
 			</nav>
 			<div className="daily-verse padding-x flex flex-col items-center gap-2">
 				<Link

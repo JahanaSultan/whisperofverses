@@ -9,15 +9,21 @@ const Search = () => {
     const [names, setNames] = useState([])
     const [loading, setLoading] = useState(true)
     useEffect(() => {
+        setSearch([])
+        setNames([])
+        setLoading(true)
         const searchWord = async () => {
             try {
                 const [word, chapterInfo] = await Promise.all([
-                    fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json`).then(res => res.json()),
-                    fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-chapter-info.json`).then(res => res.json())
+                    fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-az.json`).then(res => res.json()),
+                    fetch(`https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json`).then(res => res.json())
                 ]);
-                const filteredVerses = word.quran.filter(verse => verse.text.toLowerCase().includes(query.toLocaleLowerCase()))
+                const filteredVerses = word.quran.filter(verse => verse.text.toLowerCase().includes(query.toLowerCase()))
                 setSearch(filteredVerses)
-                const chapterNames = filteredVerses.map(verse => chapterInfo.quran.find(chapter => chapter.chapter === Number(verse.chapter)).name_az)
+                const chapterNames = filteredVerses.map(verse => {
+                    const chapter = chapterInfo.quran.find(ch => ch.chapter === Number(verse.chapter))
+                    return chapter ? chapter.name_az : ""
+                })
                 setNames(chapterNames)
             } catch (error) {
                 console.error(error);
@@ -34,7 +40,7 @@ const Search = () => {
             <ul className="chapter">
                 {search?.map((verse, index) => (
                     <Verse key={index} verse={verse.verse} verse_az={
-                        <div dangerouslySetInnerHTML={{__html: verse.text.replace(new RegExp(query, "gi"), '<mark>$&</mark>')}} />
+                        <div dangerouslySetInnerHTML={{__html: verse.text.replace(new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "gi"), '<mark>$&</mark>')}} />
                     } chapter_name={`${names[index]} surəsi`} chapter={verse.chapter} search={true} />
                 ))}
             </ul>
