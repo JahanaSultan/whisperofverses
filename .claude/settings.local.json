@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item -Path \"c:\\\\Users\\\\Jahana Sultan\\\\Desktop\\\\whisperofverses\\\\whisperofverses\\\\src\\\\main.jsx\" -ItemType File -Force)",
+      "Bash(Out-Null)",
+      "Bash(Write-Output \"created\")",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "Bash(npm install *)",
+      "Bash(npm run *)"
+    ]
+  }
+}
