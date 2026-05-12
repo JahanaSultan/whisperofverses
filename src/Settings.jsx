@@ -9,7 +9,8 @@ const Slider = ({ label, value, min, max, onChange, unit = "px" }) => (
 		<div className="flex justify-between items-center">
 			<span className="text-[13px] font-semibold text-[#013f4e]">{label}</span>
 			<span className="text-[12px] font-mono bg-[#013f4e] text-[#E4E2DB] px-2 py-0.5 rounded-full">
-				{value}{unit}
+				{value}
+				{unit}
 			</span>
 		</div>
 		<input
@@ -24,8 +25,14 @@ const Slider = ({ label, value, min, max, onChange, unit = "px" }) => (
 			}}
 		/>
 		<div className="flex justify-between text-[10px] text-[#99583B] opacity-70">
-			<span>{min}{unit}</span>
-			<span>{max}{unit}</span>
+			<span>
+				{min}
+				{unit}
+			</span>
+			<span>
+				{max}
+				{unit}
+			</span>
 		</div>
 	</div>
 );
@@ -77,8 +84,8 @@ const Settings = () => {
 				{/* Text sizes card */}
 				<div className="bg-[rgba(228,226,219,0.92)] rounded-lg border border-[rgba(153,88,59,0.18)] shadow-sm overflow-hidden backdrop-blur-sm">
 					<div className="flex items-center gap-2 bg-[#99583B] px-4 py-2.5">
-						<Type size={15} color="#E4E2DB" />
-						<h2 className="text-[#E4E2DB] text-[14px] font-semibold">Mətn Ölçüləri</h2>
+						<Type size={18} color="#E4E2DB" />
+						<h2 className="text-[#E4E2DB] font-semibold">Mətn Ölçüləri</h2>
 					</div>
 
 					<div className="p-5 flex flex-col gap-6">
@@ -88,7 +95,7 @@ const Settings = () => {
 								label="Ərəb mətn ölçüsü"
 								value={settings.arabicSize}
 								min={20}
-								max={44}
+								max={50}
 								onChange={(v) => update("arabicSize", v)}
 							/>
 							<div
@@ -107,7 +114,7 @@ const Settings = () => {
 								label="Azərbaycan mətn ölçüsü"
 								value={settings.azSize}
 								min={12}
-								max={20}
+								max={50}
 								onChange={(v) => update("azSize", v)}
 							/>
 							<div
@@ -123,7 +130,7 @@ const Settings = () => {
 				{/* Audio card */}
 				<div className="bg-[rgba(228,226,219,0.92)] rounded-lg border border-[rgba(153,88,59,0.18)] shadow-sm overflow-hidden backdrop-blur-sm">
 					<div className="flex items-center gap-2 bg-[#99583B] px-4 py-2.5">
-						<Music2 size={15} color="#E4E2DB" />
+						<Music2 size={18} color="#E4E2DB" />
 						<h2 className="text-[#E4E2DB] text-[14px] font-semibold">Audio</h2>
 					</div>
 

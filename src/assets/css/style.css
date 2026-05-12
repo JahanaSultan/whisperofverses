@@ -184,17 +184,6 @@ nav .search button:hover { background-color: var(--accent); }
     padding-top: 28px;
     padding-bottom: 48px;
 }
-
-/* ─── Section headings ────────────────────── */
-.container h2 {
-    color: var(--light);
-    text-align: center;
-    margin-bottom: 16px;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: .04em;
-}
-
 /* ─── Filter ──────────────────────────────── */
 .container .filter {
     position: relative;
