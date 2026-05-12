@@ -1,7 +1,7 @@
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
-
-const Verse = (props) => {
+const Verse = memo((props) => {
 	const copyToClipboard = () => {
 		const verse_az = document.querySelectorAll(".verse-az");
 		const verse_ar = document.querySelectorAll(".verse-ar");
@@ -62,6 +62,6 @@ const Verse = (props) => {
 			</div>
 		</li>
 	);
-};
+});
 
 export default Verse;

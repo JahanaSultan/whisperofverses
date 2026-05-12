@@ -2,16 +2,63 @@ import DigitalClock from './DigitalClock'
 import { useEffect, useState } from "react"
 import { month_names, hijri_months, days, cities } from './helper'
 
-const Aside = () => {
+const todayDate = new Date()
+const TODAY_KEY = `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`
 
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
-  const [error, setError] = useState(null);
-  const [praytime, setPraytime] = useState({})
+const Aside = () => {
+  const [city, setCity] = useState("")
+  const [country, setCountry] = useState("")
+  const [error, setError] = useState(null)
+  const [praytime, setPraytime] = useState(null)
   const [gregorian, setGregorian] = useState("")
   const [hijri, setHijri] = useState("")
   const [weekday, setWeekday] = useState("")
 
+  const applyTimings = (timings) => {
+    setPraytime({
+      fajr: timings.Fajr.slice(0, 5),
+      sunrise: timings.Sunrise.slice(0, 5),
+      dhuhr: timings.Dhuhr.slice(0, 5),
+      asr: timings.Asr.slice(0, 5),
+      maghrib: timings.Maghrib.slice(0, 5),
+      isha: timings.Isha.slice(0, 5),
+    })
+  }
+
+  const applyDate = (hijriData) => {
+    const d = new Date()
+    setGregorian(`${d.getDate()} ${month_names[d.getMonth()]} ${d.getFullYear()}`)
+    setWeekday(days[d.getDay()])
+    if (hijriData) {
+      setHijri(`${hijriData.day} ${hijri_months[hijriData.month.number - 1]} ${hijriData.year}`)
+    }
+  }
+
+  const fetchPrayTimeByCity = async (cityName) => {
+    try {
+      const cacheKey = `praytime_${cityName}_${TODAY_KEY}`
+      const cached = localStorage.getItem(cacheKey)
+      if (cached) {
+        const { timings, hijri: h } = JSON.parse(cached)
+        applyTimings(timings)
+        applyDate(h)
+        setCity(cityName)
+        setCountry("Azərbaycan")
+        return
+      }
+      const res = await fetch(
+        `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityName)}&country=AZ&method=13`
+      )
+      const { data } = await res.json()
+      localStorage.setItem(cacheKey, JSON.stringify({ timings: data.timings, hijri: data.date.hijri }))
+      applyTimings(data.timings)
+      applyDate(data.date.hijri)
+      setCity(cityName)
+      setCountry("Azərbaycan")
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   useEffect(() => {
     const currentCity = async (long, lat) => {
@@ -19,7 +66,9 @@ const Aside = () => {
         setCity(localStorage.getItem('city'))
         setCountry(localStorage.getItem('country'))
       } else {
-        const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=3e490cfc89ac4cce88823ab10ffd4c59`)
+        const response = await fetch(
+          `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${long}&key=3e490cfc89ac4cce88823ab10ffd4c59`
+        )
         const data = await response.json()
         localStorage.setItem('city', data.results[0].components.city)
         localStorage.setItem('country', data.results[0].components.country)
@@ -28,98 +77,120 @@ const Aside = () => {
       }
     }
 
-    const getPrayTime = async (long, lat) => {
-      let today = new Date()
-      let day = today.getDate()
-      let month = today.getMonth() + 1
-      let year = today.getFullYear()
-      let weekDay = today.getDay()
-
-      const response = await fetch(`https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${long}&method=13`)
-      const data = await response.json()
-      setPraytime({
-        "fajr": data.data[day - 1].timings.Fajr.slice(0, 5),
-        "sunrise": data.data[day - 1].timings.Sunrise.slice(0, 5),
-        "dhuhr": data.data[day - 1].timings.Dhuhr.slice(0, 5),
-        "asr": data.data[day - 1].timings.Asr.slice(0, 5),
-        "maghrib": data.data[day - 1].timings.Maghrib.slice(0, 5),
-        "isha": data.data[day - 1].timings.Isha.slice(0, 5)
-      })
-      setGregorian(`${day} ${month_names[month - 1]} ${year}`)
-      setHijri(`${data.data[day].date.hijri.day} ${hijri_months[data.data[day].date.hijri.month.number - 1]} ${data.data[day].date.hijri.year}`)
-      setWeekday(days[weekDay])
+    const fetchPrayTimeByCoords = async (lat, long) => {
+      try {
+        const cacheKey = `praytime_coords_${TODAY_KEY}`
+        const cached = localStorage.getItem(cacheKey)
+        if (cached) {
+          const { timings, hijri: h } = JSON.parse(cached)
+          applyTimings(timings)
+          applyDate(h)
+          return
+        }
+        const res = await fetch(
+          `https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${long}&method=13`
+        )
+        const { data } = await res.json()
+        localStorage.setItem(cacheKey, JSON.stringify({ timings: data.timings, hijri: data.date.hijri }))
+        applyTimings(data.timings)
+        applyDate(data.date.hijri)
+      } catch (err) {
+        console.error(err)
+      }
     }
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         position => {
-          currentCity(position.coords.longitude, position.coords.latitude)
-          getPrayTime(position.coords.longitude, position.coords.latitude)
+          const { longitude, latitude } = position.coords
+          currentCity(longitude, latitude)
+          fetchPrayTimeByCoords(latitude, longitude)
         },
-        error => {
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              setError('Lokasiya məlumatlarına icazə verilmədi. İcazə vermək üçün brauzer ayarlarından dəyişiklik edin.');
-              break;
-            case error.POSITION_UNAVAILABLE:
-              setError('Lokasiya məlumatları mövcud deyil.');
-              break;
-            case error.TIMEOUT:
-              setError('Lokasiya məlumatlarına gətirmə müddəti bitdi.');
-              break;
+        err => {
+          switch (err.code) {
+            case err.PERMISSION_DENIED:
+              setError('Lokasiya məlumatlarına icazə verilmədi. İcazə vermək üçün brauzer ayarlarından dəyişiklik edin.')
+              break
+            case err.POSITION_UNAVAILABLE:
+              setError('Lokasiya məlumatları mövcud deyil.')
+              break
+            case err.TIMEOUT:
+              setError('Lokasiya məlumatlarına gətirmə müddəti bitdi.')
+              break
             default:
-              setError('Bilinməyən bir səhv baş verdi.');
-              break;
+              setError('Bilinməyən bir səhv baş verdi.')
           }
+          applyDate(null)
         }
-      );
+      )
     } else {
-      setError("Brauzeriniz Lokasiya xidmətini dəstəkləmir");
+      setError("Brauzeriniz Lokasiya xidmətini dəstəkləmir")
+      applyDate(null)
     }
-  }, []);
-
-
+  }, [])
 
   return (
     <aside>
       <h2>Təqvim</h2>
       <div className="today">
-        {hijri ? (<div className="hijri">
-          <h3>Hicri</h3>
-          <p>{hijri}</p>
-        </div>) : (null)}
-
+        {hijri && (
+          <div className="hijri">
+            <h3>Hicri</h3>
+            <p>{hijri}</p>
+          </div>
+        )}
         <DigitalClock weekday={weekday} />
-        {gregorian ? (<div className="gregorian">
-          <h3>Miladi</h3>
-          <p>{gregorian}</p>
-        </div>) : (null)}
-
+        {gregorian && (
+          <div className="gregorian">
+            <h3>Miladi</h3>
+            <p>{gregorian}</p>
+          </div>
+        )}
       </div>
+
       <div className="prayer-sticky">
         <h2>Namaz Vaxtları</h2>
         <div className="prayer-date">
-          {error ? (<>
-            <h4 id="location" >{error}</h4>
-            Şəhər seçin:
-            <select name="" id="">
-              {cities.sort().map((city, index) => (
-                <option key={index} value={city}>{city}</option>
-              ))}
-            </select>
-          </>
+          {error ? (
+            <>
+              <h4 id="location">{error}</h4>
+              <label>Şəhər seçin:
+                <select defaultValue="" onChange={(e) => fetchPrayTimeByCity(e.target.value)}>
+                  <option value="" disabled>Şəhər seçin...</option>
+                  {cities.sort().map((c, i) => (
+                    <option key={i} value={c}>{c}</option>
+                  ))}
+                </select>
+              </label>
+              {praytime && (
+                <>
+                  <h4>{city}, {country}</h4>
+                  <ul>
+                    <li><span>Fəcr</span><span>{praytime.fajr}</span></li>
+                    <li><span>Günəş</span><span>{praytime.sunrise}</span></li>
+                    <li><span>Zöhr</span><span>{praytime.dhuhr}</span></li>
+                    <li><span>Əsr</span><span>{praytime.asr}</span></li>
+                    <li><span>Məğrib</span><span>{praytime.maghrib}</span></li>
+                    <li><span>İşa</span><span>{praytime.isha}</span></li>
+                  </ul>
+                </>
+              )}
+            </>
           ) : (
             <>
               <h4 id="location">{city}, {country}</h4>
-              <ul>
-                <li><span>Fəcr</span><span>{praytime?.fajr}</span></li>
-                <li><span>Günəş</span><span>{praytime?.sunrise}</span></li>
-                <li><span>Zöhr</span><span>{praytime?.dhuhr}</span></li>
-                <li><span>Əsr</span><span>{praytime?.asr}</span></li>
-                <li><span>Məğrib</span><span>{praytime?.maghrib}</span></li>
-                <li><span>İşa</span><span>{praytime?.isha}</span></li>
-              </ul>
-            </>)}
+              {praytime && (
+                <ul>
+                  <li><span>Fəcr</span><span>{praytime.fajr}</span></li>
+                  <li><span>Günəş</span><span>{praytime.sunrise}</span></li>
+                  <li><span>Zöhr</span><span>{praytime.dhuhr}</span></li>
+                  <li><span>Əsr</span><span>{praytime.asr}</span></li>
+                  <li><span>Məğrib</span><span>{praytime.maghrib}</span></li>
+                  <li><span>İşa</span><span>{praytime.isha}</span></li>
+                </ul>
+              )}
+            </>
+          )}
         </div>
       </div>
     </aside>
