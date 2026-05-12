@@ -8,6 +8,8 @@ import Aside from './Aside';
 import Chapter from './Chapter';
 import Search from './Search';
 import BacktoTop from './BacktoTop';
+import Settings from './Settings';
+import { SettingsProvider } from './SettingsContext';
 
 function App() {
   const loc = useLocation();
@@ -22,19 +24,22 @@ function App() {
     onTop()
   }, [loc]);
   return (
-    <div className='overlay'>
-      <Header />
-      <div className="container padding-x">
-        <Routes>
-          <Route path='/' element={<Main />} />
-          <Route path='/chapter/:id' element={<Chapter />} />
-          <Route path='/search/:query' element={<Search />} />
-        </Routes>
-        <Aside />
+    <SettingsProvider>
+      <div className='overlay'>
+        <Header />
+        <div className="container padding-x">
+          <Routes>
+            <Route path='/' element={<Main />} />
+            <Route path='/chapter/:id' element={<Chapter />} />
+            <Route path='/search/:query' element={<Search />} />
+            <Route path='/settings' element={<Settings />} />
+          </Routes>
+          <Aside />
+        </div>
+        <BacktoTop/>
+        <Footer />
       </div>
-      <BacktoTop/>
-      <Footer />
-    </div>
+    </SettingsProvider>
   );
 }
 

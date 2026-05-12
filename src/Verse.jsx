@@ -2,8 +2,11 @@ import { ArrowRight, Check, Copy } from "lucide-react";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 import AudioPlayer from "./AudioPlayer";
+import { useSettings } from "./SettingsContext";
 
 const Verse = memo((props) => {
+	const { settings } = useSettings();
+
 	const copyToClipboard = () => {
 		const verse_az = document.querySelectorAll(".verse-az");
 		const verse_ar = document.querySelectorAll(".verse-ar");
@@ -47,7 +50,10 @@ const Verse = memo((props) => {
 			{/* Verse body */}
 			<div className="w-full">
 				{/* Arabic text */}
-				<div className="verse-ar text-[28px] w-full bg-[#013f4e] text-[#f5e6c8] text-right [direction:rtl] font-arabic leading-[2.6] px-5 py-4">
+				<div
+					className="verse-ar w-full bg-[#013f4e] text-[#f5e6c8] text-right [direction:rtl] font-arabic leading-[2.6] px-5 py-4"
+					style={{ fontSize: settings.arabicSize + "px" }}
+				>
 					{props.verse_ar ?? (
 						<Link
 							to={`/chapter/${props.chapter}`}
@@ -60,11 +66,12 @@ const Verse = memo((props) => {
 				</div>
 
 				{/* Audio player */}
-				{props.audio ? <AudioPlayer src={props.audio} /> : null}
+				{props.audio ? <AudioPlayer src={props.audio} onEnded={props.onEnded} /> : null}
 
 				{/* Azerbaijani translation */}
 				<div
-					className="verse-az text-[#013f4e] text-sm leading-[1.85] border-t border-[rgba(201,191,183,0.5)] px-4 py-3"
+					className="verse-az text-[#013f4e] leading-[1.85] border-t border-[rgba(201,191,183,0.5)] px-4 py-3"
+					style={{ fontSize: settings.azSize + "px" }}
 					data-chapter={props.chapter}
 					data-verse={props.verse}
 				>

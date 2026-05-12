@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import Verse from "./Verse";
 import Loading from "./Loading";
+import { useSettings } from "./SettingsContext";
 
 const jsonCache = new Map();
 
@@ -14,10 +15,19 @@ const fetchJSON = async (url) => {
 
 const Chapter = () => {
 	const { id } = useParams();
+	const { settings } = useSettings();
 	const [chapterinfo, setchapterinfo] = useState(null);
 	const [verses, setVerses] = useState([]);
 	const [audios, setAudios] = useState([]);
 	const [loading, setLoading] = useState(true);
+
+	const handleVerseEnded = useCallback((index) => {
+		if (!settings.autoPlayNext) return;
+		const nextAudio = audios[index + 1]?.audio;
+		if (nextAudio) {
+			window.dispatchEvent(new CustomEvent("audio-autoplay", { detail: nextAudio }));
+		}
+	}, [settings.autoPlayNext, audios]);
 
 	useEffect(() => {
 		setLoading(true);
@@ -82,6 +92,7 @@ const Chapter = () => {
 						verse_ar={verse.text_ar}
 						audio={audios[index]?.audio}
 						chapter={chapterinfo?.name_az}
+						onEnded={() => handleVerseEnded(index)}
 					/>
 				))}
 			</ul>

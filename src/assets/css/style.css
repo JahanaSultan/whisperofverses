@@ -536,17 +536,20 @@ nav .search button:hover { background-color: var(--accent); }
 
 /* ─── Equalizer bars ──────────────────────── */
 .eq-bar {
-    height: 4px;
-    animation: eq-dance 0.7s ease-in-out infinite alternate;
+    height: 3px;
+    animation: eq-dance 0.65s ease-in-out infinite alternate;
 }
 
 @keyframes eq-dance {
-    0%   { height: 3px;  opacity: .7; }
-    20%  { height: 18px; opacity: 1;  }
-    40%  { height: 7px;  opacity: .8; }
-    60%  { height: 22px; opacity: 1;  }
-    80%  { height: 10px; opacity: .9; }
-    100% { height: 5px;  opacity: .7; }
+    0%   { height: 3px;  }
+    10%  { height: 22px; }
+    22%  { height: 8px;  }
+    35%  { height: 30px; }
+    48%  { height: 14px; }
+    60%  { height: 26px; }
+    72%  { height: 6px;  }
+    85%  { height: 30px; }
+    100% { height: 4px;  }
 }
 
 /* ─── Chapter page ────────────────────────── */
@@ -723,6 +726,35 @@ nav .search button:hover { background-color: var(--accent); }
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* ─── Settings slider ─────────────────────── */
+.settings-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #99583B;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    transition: transform .15s var(--ease), box-shadow .15s var(--ease);
+}
+
+.settings-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(153,88,59,.45);
+}
+
+.settings-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #99583B;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.25);
 }
 
 /* ─── Footer ──────────────────────────────── */
