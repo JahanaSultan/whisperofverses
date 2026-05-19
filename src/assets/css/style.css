@@ -650,6 +650,25 @@ nav .settings-btn {
     width: 38px;
 }
 
+@keyframes eqPulse {
+    0%,
+    100% {
+        transform: scaleY(0.24);
+    }
+
+    25% {
+        transform: scaleY(0.92);
+    }
+
+    50% {
+        transform: scaleY(0.38);
+    }
+
+    75% {
+        transform: scaleY(0.72);
+    }
+}
+
 @keyframes shimmer {
     0% {
         background-position: 200% 0;

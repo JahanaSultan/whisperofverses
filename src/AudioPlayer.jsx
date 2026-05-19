@@ -1,7 +1,12 @@
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play, Pause } from "lucide-react";
 
-const BAR_COUNT = 56;
+const EQ_BAR_COUNT = 114;
+const EQ_BARS = Array.from({ length: EQ_BAR_COUNT }, (_, i) => ({
+	id: i,
+	duration: `${0.7 + (i % 9) * 0.12}s`,
+	delay: `${(i % 6) * 0.08}s`,
+}));
 
 const MINUTE_THEMES = [
 	{
@@ -29,139 +34,23 @@ const MINUTE_THEMES = [
 const buildGradient = (colors, direction = "to top") =>
 	`linear-gradient(${direction}, ${colors[0]}, ${colors[1]} 45%, ${colors[2]})`;
 
-// Gentle sine-wave idle shape so bars aren't flat when paused
-const IDLE_BARS = Array.from({ length: BAR_COUNT }, (_, i) => {
-	const t = i / BAR_COUNT;
-	return Math.max(2, 5 * Math.abs(Math.sin(t * Math.PI * 3.5 + 0.6)) + 1.5);
-});
-
 const AudioPlayer = ({ src, onEnded }) => {
-	const audioRef    = useRef(null);
-	const analyserRef = useRef(null);
-	const audioCtxRef = useRef(null);
-	const rafRef      = useRef(null);
-	const fallback    = useRef(false); // true when analyser unavailable
-	const silentFramesRef = useRef(0);
+	const audioRef = useRef(null);
 	const containerRef = useRef(null);
 
-	const [isPlaying,   setIsPlaying]   = useState(false);
-	const [bars,        setBars]        = useState(IDLE_BARS);
+	const [isPlaying, setIsPlaying] = useState(false);
 	const [currentTime, setCurrentTime] = useState(0);
-	const [duration,    setDuration]    = useState(0);
+	const [duration, setDuration] = useState(0);
 
-	// ── Audio context setup ────────────────────────────────────────────────────
-	const setupAudio = () => {
-		if (audioCtxRef.current) return;
-		try {
-			const ctx      = new (window.AudioContext || window.webkitAudioContext)();
-			const analyser = ctx.createAnalyser();
-			analyser.fftSize = 512;
-			analyser.smoothingTimeConstant = 0.7;
-
-			const audio  = audioRef.current;
-			const stream = audio.captureStream?.() ?? audio.mozCaptureStream?.();
-			if (!stream) throw new Error("captureStream unavailable");
-
-			ctx.createMediaStreamSource(stream).connect(analyser);
-			audioCtxRef.current = ctx;
-			analyserRef.current = analyser;
-		} catch {
-			fallback.current = true;
-		}
-	};
-
-	// ── Time-based pseudo-random draw (fallback — looks rhythmic without CORS) ─
-	const drawFakeBars = useCallback(() => {
-		const t = audioRef.current?.currentTime ?? 0;
-		setBars(
-			Array.from({ length: BAR_COUNT }, (_, i) => {
-				const bell = 0.28 + 0.72 * Math.sin((i / BAR_COUNT) * Math.PI);
-				const v =
-					Math.abs(Math.sin(t * 4.13  + i * 0.58)) * 12 +
-					Math.abs(Math.sin(t * 9.37  + i * 1.23)) *  8 +
-					Math.abs(Math.sin(t * 17.11 + i * 0.37)) *  5 +
-					Math.abs(Math.sin(t * 24.73 + i * 2.09)) *  3;
-				return Math.max(2, v * bell);
-			}),
-		);
-		rafRef.current = requestAnimationFrame(drawFakeBars);
-	}, []);
-
-	// ── Real frequency-analysis draw ──────────────────────────────────────────
-	const drawBars = useCallback(() => {
-		const analyser = analyserRef.current;
-		if (!analyser) return;
-
-		const data = new Uint8Array(analyser.frequencyBinCount);
-		analyser.getByteFrequencyData(data);
-
-		const usable = Math.floor(data.length * 0.82);
-		const step   = usable / BAR_COUNT;
-
-		let maxEnergy = 0;
-		for (let i = 0; i < usable; i++) {
-			if (data[i] > maxEnergy) maxEnergy = data[i];
-		}
-
-		if (maxEnergy === 0 && (audioRef.current?.currentTime ?? 0) > 0.4) {
-			silentFramesRef.current += 1;
-		} else {
-			silentFramesRef.current = 0;
-		}
-
-		// Only fallback when analyser is completely flat for a sustained period.
-		if (silentFramesRef.current > 48) {
-			fallback.current = true;
-			silentFramesRef.current = 0;
-			rafRef.current = requestAnimationFrame(drawFakeBars);
+	const startPlay = () => {
+		window.dispatchEvent(new CustomEvent("audio-play", { detail: src }));
+		const playPromise = audioRef.current.play();
+		if (playPromise?.then) {
+			playPromise.then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
 			return;
 		}
-
-		setBars(
-			Array.from({ length: BAR_COUNT }, (_, i) => {
-				const s = Math.floor(i * step);
-				const e = Math.max(s + 1, Math.floor((i + 1) * step));
-				let sum = 0;
-				for (let j = s; j < e; j++) sum += data[j];
-				const avg  = sum / (e - s);
-				const bell = 0.58 + 0.42 * Math.sin((i / BAR_COUNT) * Math.PI);
-				return Math.max(2, (avg / 255) * 34 * bell);
-			}),
-		);
-		rafRef.current = requestAnimationFrame(drawBars);
-	}, [drawFakeBars]);
-
-	const stopAnimation = useCallback(() => {
-		cancelAnimationFrame(rafRef.current);
-		rafRef.current = null;
-		setBars(IDLE_BARS);
-	}, []);
-
-	const startPlay = useCallback(() => {
-		setupAudio();
-		window.dispatchEvent(new CustomEvent("audio-play", { detail: src }));
-		const ctx   = audioCtxRef.current;
-		const begin = () => {
-			cancelAnimationFrame(rafRef.current);
-			rafRef.current = null;
-			silentFramesRef.current = 0;
-			fallback.current = !analyserRef.current;
-			const runVisualizer = () => {
-				setIsPlaying(true);
-				fallback.current ? drawFakeBars() : drawBars();
-			};
-			const playPromise = audioRef.current.play();
-			if (playPromise?.then) {
-				playPromise.then(runVisualizer).catch(() => {
-					setIsPlaying(false);
-					stopAnimation();
-				});
-			} else {
-				runVisualizer();
-			}
-		};
-		ctx ? ctx.resume().then(begin, begin) : begin();
-	}, [src, drawBars, drawFakeBars, stopAnimation]);
+		setIsPlaying(true);
+	};
 
 	// ── Global: pause when another player starts ──────────────────────────────
 	useEffect(() => {
@@ -169,11 +58,10 @@ const AudioPlayer = ({ src, onEnded }) => {
 			if (e.detail === src) return;
 			audioRef.current?.pause();
 			setIsPlaying(false);
-			stopAnimation();
 		};
 		window.addEventListener("audio-play", handler);
 		return () => window.removeEventListener("audio-play", handler);
-	}, [src, stopAnimation]);
+	}, [src]);
 
 	// ── Autoplay-next trigger from Chapter ────────────────────────────────────
 	useEffect(() => {
@@ -186,19 +74,13 @@ const AudioPlayer = ({ src, onEnded }) => {
 		};
 		window.addEventListener("audio-autoplay", handler);
 		return () => window.removeEventListener("audio-autoplay", handler);
-	}, [src, startPlay]);
-
-	useEffect(() => () => {
-		cancelAnimationFrame(rafRef.current);
-		audioCtxRef.current?.close();
-	}, []);
+	}, [src]);
 
 	// ── Controls ──────────────────────────────────────────────────────────────
 	const togglePlay = () => {
 		if (isPlaying) {
 			audioRef.current.pause();
 			setIsPlaying(false);
-			stopAnimation();
 		} else {
 			startPlay();
 		}
@@ -212,16 +94,7 @@ const AudioPlayer = ({ src, onEnded }) => {
 	const handleEnded = () => {
 		setIsPlaying(false);
 		setCurrentTime(0);
-		stopAnimation();
 		onEnded?.();
-	};
-
-	const handleSeek = (e) => {
-		if (!duration) return;
-		const { left, width } = e.currentTarget.getBoundingClientRect();
-		const ratio = Math.max(0, Math.min(1, (e.clientX - left) / width));
-		audioRef.current.currentTime = ratio * duration;
-		setCurrentTime(ratio * duration);
 	};
 
 	const fmt = (s) => {
@@ -230,11 +103,11 @@ const AudioPlayer = ({ src, onEnded }) => {
 	};
 
 	const progress = duration ? currentTime / duration : 0;
+	const playedBars = Math.floor(progress * EQ_BAR_COUNT);
 	const elapsedMinutes = Math.floor(currentTime / 60);
 	const minuteTheme = MINUTE_THEMES[elapsedMinutes % MINUTE_THEMES.length];
 	const waveGradient = buildGradient(minuteTheme.wave);
 	const mutedGradient = buildGradient(minuteTheme.muted);
-	const progressGradient = buildGradient(minuteTheme.wave, "to right");
 
 	// ── Render ────────────────────────────────────────────────────────────────
 	return (
@@ -255,7 +128,7 @@ const AudioPlayer = ({ src, onEnded }) => {
 			/>
 
 			{/* ── Main row ─────────────────────────────── */}
-			<div className="flex items-center gap-3 px-3.5 pt-3 pb-2">
+			<div className="flex items-center gap-3 px-3.5 py-1">
 
 				{/* Play / Pause */}
 				<button
@@ -277,30 +150,34 @@ const AudioPlayer = ({ src, onEnded }) => {
 
 				{/* Equalizer visualizer */}
 				<div
-					className="flex-1 flex items-end justify-between gap-pxoverflow-hidden"
+					className="flex-1 flex items-end justify-between gap-px overflow-hidden"
 					style={{
-						height: 38,
+						height: 16,
 						filter: isPlaying
 							? `drop-shadow(0 0 6px ${minuteTheme.glow})`
 							: "none",
 						transition: "filter 0.5s",
 					}}
 				>
-					{bars.map((h, i) => (
+					{EQ_BARS.map((bar) => {
+						const passed = bar.id < playedBars;
+						return (
 						<div
-							key={i}
-							className="w-[2px] shrink-0 rounded-full"
+							key={bar.id}
+							className="w-0.5 h-4 shrink-0 rounded-full origin-bottom"
 							style={{
-								height: `${Math.min(h, 34)}px`,
-								background: isPlaying
-									? waveGradient
-									: mutedGradient,
-								transition: isPlaying
-									? "height 55ms ease"
-									: "height 600ms ease, background 500ms ease",
+								background: passed ? waveGradient : mutedGradient,
+								transition: "background 500ms ease",
+								animationName: "eqPulse",
+								animationTimingFunction: "ease-in-out",
+								animationIterationCount: "infinite",
+								animationPlayState: isPlaying ? "running" : "paused",
+								animationDelay: bar.delay,
+								animationDuration: bar.duration,
 							}}
 						/>
-					))}
+						);
+					})}
 				</div>
 
 				{/* Time */}
@@ -312,34 +189,7 @@ const AudioPlayer = ({ src, onEnded }) => {
 				</span>
 			</div>
 
-			{/* ── Seekable progress bar ─────────────────── */}
-			<div
-				className="mx-3.5 mb-2.5 relative cursor-pointer group"
-				style={{ height: 3, borderRadius: 99, background: "rgba(255,255,255,0.08)" }}
-				onClick={handleSeek}
-			>
-				{/* Fill */}
-				<div
-					className="absolute inset-y-0 left-0 rounded-full"
-					style={{
-						width: `${progress * 100}%`,
-						background: progressGradient,
-						transition: "width 0.12s linear",
-						boxShadow: isPlaying ? `0 0 7px ${minuteTheme.glow}` : "none",
-					}}
-				/>
-				{/* Scrubber dot (appears on hover) */}
-				<div
-					className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none"
-					style={{
-						left: `${progress * 100}%`,
-						width: 9,
-						height: 9,
-						background: minuteTheme.wave[1],
-						boxShadow: `0 0 8px ${minuteTheme.glow}`,
-					}}
-				/>
-			</div>
+			<div className="h-2" />
 		</div>
 	);
 };
