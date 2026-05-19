@@ -41,7 +41,7 @@ const Header = () => {
 						<h1>WoV</h1>
 					</div>
 				</Link>
-				<div className="flex items-center gap-2">
+				<div className="header-actions">
 					<div className="search">
 						<input
 							type="search"
@@ -57,7 +57,7 @@ const Header = () => {
 					<Link
 						to="/settings"
 						aria-label="Parametrlər"
-						className="ml-3 flex items-center justify-center w-9 h-9 rounded-full transition-colors duration-200 hover:bg-[rgba(228,226,219,0.15)]"
+						className="settings-btn flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-[rgba(228,226,219,0.15)]"
 					>
 						<Settings size={20} color="var(--light)" />
 					</Link>

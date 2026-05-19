@@ -4,6 +4,7 @@ const STORAGE_KEY = "wov_settings";
 
 const defaults = {
 	arabicSize: 28,
+	arabicFont: "Scheherazade New",
 	azSize: 14,
 	autoPlayNext: false,
 	reciterSubfolder: "",

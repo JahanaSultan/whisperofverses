@@ -51,8 +51,11 @@ const Verse = memo((props) => {
 			<div className="w-full">
 				{/* Arabic text */}
 				<div
-					className="verse-ar w-full bg-[#013f4e] text-[#f5e6c8] text-right [direction:rtl] font-arabic leading-[2.6] px-5 py-4"
-					style={{ fontSize: settings.arabicSize + "px" }}
+					className="verse-ar arabic-text w-full bg-[#013f4e] text-[#f5e6c8] text-right [direction:rtl] leading-[2.6] px-5 py-4"
+					style={{
+						fontSize: settings.arabicSize + "px",
+						fontFamily: `${settings.arabicFont}, serif`,
+					}}
 				>
 					{props.verse_ar ?? (
 						<Link

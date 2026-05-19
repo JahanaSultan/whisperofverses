@@ -4,6 +4,19 @@ import { useSettings } from "./SettingsContext";
 
 const ARABIC_PREVIEW = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
 const AZ_PREVIEW = "Mərhəmətli, rəhmli Allahın adı ilə.";
+const ARABIC_FONT_OPTIONS = [
+	"Scheherazade New",
+	"Amiri",
+	"Aref Ruqaa",
+	"Cairo",
+	"Harmattan",
+	"Lateef",
+	"Markazi Text",
+	"Noto Naskh Arabic",
+	"Noto Kufi Arabic",
+	"Reem Kufi",
+	"Tajawal",
+];
 
 const Slider = ({ label, value, min, max, onChange, unit = "px" }) => (
 	<div className="flex flex-col gap-2">
@@ -102,6 +115,7 @@ const Settings = () => {
 
 	const reset = () => {
 		update("arabicSize", 28);
+		update("arabicFont", "Scheherazade New");
 		update("azSize", 14);
 		update("autoPlayNext", false);
 		update("reciterSubfolder", "");
@@ -135,6 +149,32 @@ const Settings = () => {
 					</div>
 
 					<div className="p-5 flex flex-col gap-6">
+						<div className="flex flex-col gap-2">
+							<label
+								htmlFor="arabic-font"
+								className="text-[13px] font-semibold text-[#013f4e]"
+							>
+								Ərəb font seçimi
+							</label>
+							<select
+								id="arabic-font"
+								value={settings.arabicFont || "Scheherazade New"}
+								onChange={(e) => update("arabicFont", e.target.value)}
+								className="w-full rounded-md border border-[rgba(153,88,59,0.25)] bg-white px-3 py-2 text-[13px] text-[#013f4e] outline-none focus:border-[#99583B]"
+							>
+								{ARABIC_FONT_OPTIONS.map((fontName) => (
+									<option key={fontName} value={fontName}>
+										{fontName}
+									</option>
+								))}
+							</select>
+							<p className="text-[12px] text-[#6b8a95] leading-[1.6]">
+								Mobil üçün daha oxunaqlı görünən fontu seçə bilərsiniz.
+							</p>
+						</div>
+
+						<div className="border-t border-[rgba(201,191,183,0.5)]" />
+
 						{/* Arabic size */}
 						<div className="flex flex-col gap-3">
 							<Slider
@@ -145,8 +185,11 @@ const Settings = () => {
 								onChange={(v) => update("arabicSize", v)}
 							/>
 							<div
-								className="w-full bg-[#013f4e] text-[#f5e6c8] text-right [direction:rtl] font-arabic leading-[2.4] px-5 py-3 rounded-md"
-								style={{ fontSize: settings.arabicSize + "px" }}
+								className="arabic-text w-full bg-[#013f4e] text-[#f5e6c8] text-right [direction:rtl] leading-[2.4] px-5 py-3 rounded-md"
+								style={{
+									fontSize: settings.arabicSize + "px",
+									fontFamily: `${settings.arabicFont || "Scheherazade New"}, serif`,
+								}}
 							>
 								{ARABIC_PREVIEW}
 							</div>
