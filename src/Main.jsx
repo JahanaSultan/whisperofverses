@@ -1,33 +1,25 @@
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import ChapterName from "./ChapterName"
 import Loading from "./Loading"
+import { useChapterInfo } from "./hooks/useChapterInfo"
 
 const Main = () => {
-    const [chapters, setChapters] = useState([])
-    const [chapterHolder, setChapterHolder] = useState([])
-    const [loading, setLoading] = useState(true)
+    const { data, isLoading } = useChapterInfo()
+    const [search, setSearch] = useState("")
 
-    useEffect(() => {
-        fetch('https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json')
-            .then((res) => res.json())
-            .then((data) => {
-                setChapters(data.quran)
-                setChapterHolder(data.quran)
-                setLoading(false)
-            })
-    }, [])
-
-    const findChapter = (e) => {
-        const val = e.target.value.toLowerCase()
-        setChapters(chapterHolder.filter(c => c.name_az.toLowerCase().startsWith(val)))
-    }
+    const chapters = useMemo(() => {
+        const all = data?.quran ?? []
+        if (!search) return all
+        const val = search.toLowerCase()
+        return all.filter(c => c.name_az.toLowerCase().startsWith(val))
+    }, [data, search])
 
     return (
         <main>
             <h2>Surələr</h2>
             <div className="filter">
                 <i className="ri-search-line filter-icon"></i>
-                <input type="text" placeholder="Surə adını yaz..." onInput={findChapter} />
+                <input type="text" placeholder="Surə adını yaz..." onInput={(e) => setSearch(e.target.value)} />
             </div>
             <ul className="chapters">
                 {chapters.map((chapter) => (
@@ -40,7 +32,7 @@ const Main = () => {
                     />
                 ))}
             </ul>
-            {loading && <Loading />}
+            {isLoading && <Loading />}
         </main>
     )
 }

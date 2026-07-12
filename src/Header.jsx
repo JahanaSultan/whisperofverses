@@ -6,21 +6,14 @@ import {
 	Settings,
 } from "lucide-react";
 import logo from "./assets/img/logo.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useRandomVerse } from "./hooks/useRandomVerse";
 
 const Header = () => {
 	const [search, setSearch] = useState("");
-	const [verse, setVerse] = useState(null);
+	const verse = useRandomVerse();
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		fetch(
-			"https://cdn.jsdelivr.net/gh/fawazahmed0/quran-api@1/editions/aze-alikhanmusayev.json",
-		)
-			.then((res) => res.json())
-			.then((data) => setVerse(data.quran[Math.floor(Math.random() * 6236)]));
-	}, []);
 
 	const handleSearch = () => {
 		if (search.trim()) navigate(`/search/${search.trim()}`);

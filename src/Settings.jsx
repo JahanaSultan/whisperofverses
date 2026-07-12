@@ -1,6 +1,7 @@
 import { Settings2, Type, Music2, RotateCcw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useSettings } from "./SettingsContext";
+import { useReciters } from "./hooks/useReciters";
 
 const ARABIC_PREVIEW = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
 const AZ_PREVIEW = "Mərhəmətli, rəhmli Allahın adı ilə.";
@@ -69,40 +70,8 @@ const Toggle = ({ checked, onChange }) => (
 
 const Settings = () => {
 	const { settings, update } = useSettings();
-	const [reciters, setReciters] = useState([]);
-	const [recitersLoading, setRecitersLoading] = useState(false);
-	const [recitersError, setRecitersError] = useState("");
-
-	useEffect(() => {
-		const controller = new AbortController();
-		const loadReciters = async () => {
-			setRecitersLoading(true);
-			setRecitersError("");
-			try {
-				const res = await fetch("https://everyayah.com/data/recitations.js", {
-					signal: controller.signal,
-				});
-				const raw = await res.json();
-				const list = Object.entries(raw)
-					.filter(([key]) => !isNaN(Number(key)))
-					.map(([, val]) => ({
-						subfolder: val.subfolder,
-						name: val.name,
-						bitrate: val.bitrate,
-					}))
-					.sort((a, b) => a.name.localeCompare(b.name));
-				setReciters(list);
-			} catch (error) {
-				if (error.name !== "AbortError") {
-					setRecitersError("Qarilər siyahısı yüklənmədi.");
-				}
-			} finally {
-				setRecitersLoading(false);
-			}
-		};
-		loadReciters();
-		return () => controller.abort();
-	}, []);
+	const { data: reciters = [], isLoading: recitersLoading, isError } = useReciters();
+	const recitersError = isError ? "Qarilər siyahısı yüklənmədi." : "";
 
 	const selectedReciterName = useMemo(() => {
 		if (!settings.reciterSubfolder) return "";

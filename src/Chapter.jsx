@@ -1,20 +1,14 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useMemo, useCallback, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Verse from "./Verse";
 import Loading from "./Loading";
 import { useSettings } from "./SettingsContext";
-
-const jsonCache = new Map();
+import { useChapterInfo } from "./hooks/useChapterInfo";
+import { useQuranAz } from "./hooks/useQuranAz";
+import { useQuranAr } from "./hooks/useQuranAr";
 
 // Default reciter subfolder on everyayah.com (Alafasy 128kbps)
 const DEFAULT_SUBFOLDER = "Alafasy_128kbps";
-
-const fetchJSON = async (url) => {
-	if (jsonCache.has(url)) return jsonCache.get(url);
-	const promise = fetch(url).then((res) => res.json());
-	jsonCache.set(url, promise);
-	return promise;
-};
 
 /** Build a per-verse audio URL from everyayah.com */
 const everyayahUrl = (subfolder, chapter, verse) => {
@@ -27,11 +21,36 @@ const Chapter = () => {
 	const { id } = useParams();
 	const location = useLocation();
 	const { settings } = useSettings();
-	const [chapterinfo, setchapterinfo] = useState(null);
-	const [verses, setVerses] = useState([]);
-	const [audios, setAudios] = useState([]);
-	const [loading, setLoading] = useState(true);
 	const chapterinfoRef = useRef(null);
+
+	const { data: chapterInfoData, isLoading: infoLoading } = useChapterInfo();
+	const { data: quranAzData, isLoading: azLoading } = useQuranAz();
+	const { data: quranArData, isLoading: arLoading } = useQuranAr();
+	const loading = infoLoading || azLoading || arLoading;
+
+	const numId = Number(id);
+	const subfolder = settings.reciterSubfolder || DEFAULT_SUBFOLDER;
+
+	const chapterinfo = useMemo(
+		() => chapterInfoData?.quran.find((c) => c.chapter === numId),
+		[chapterInfoData, numId],
+	);
+	chapterinfoRef.current = chapterinfo;
+
+	const verses = useMemo(() => {
+		if (!quranAzData || !quranArData) return [];
+		const azVerses = quranAzData.quran.filter((v) => v.chapter === numId);
+		const arVerses = quranArData.quran.filter((v) => v.chapter === numId);
+		return azVerses.map((v, i) => ({ ...v, text_ar: arVerses[i].text }));
+	}, [quranAzData, quranArData, numId]);
+
+	const audios = useMemo(
+		() =>
+			verses.map((v) => ({
+				audio: everyayahUrl(subfolder, numId, v.verse),
+			})),
+		[verses, subfolder, numId],
+	);
 
 	const handleVerseEnded = useCallback(
 		(index) => {
@@ -45,46 +64,6 @@ const Chapter = () => {
 		},
 		[settings.autoPlayNext, audios],
 	);
-
-	useEffect(() => {
-		setLoading(true);
-		const loadDatas = async () => {
-			try {
-				const [info, ar, az] = await Promise.all([
-					fetchJSON(
-						"https://cdn.jsdelivr.net/gh/JahanaSultan/quran/json/quran-chapter-info.json",
-					),
-					fetchJSON(
-						"https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-ar.json",
-					),
-					fetchJSON(
-						"https://cdn.jsdelivr.net/gh/JahanaSultan/quran@latest/json/quran-az.json",
-					),
-				]);
-
-				const numId = Number(id);
-				const subfolder = settings.reciterSubfolder || DEFAULT_SUBFOLDER;
-				const azVerses = az.quran.filter((v) => v.chapter === numId);
-				const arVerses = ar.quran.filter((v) => v.chapter === numId);
-				const chInfo = info.quran.find((c) => c.chapter === numId);
-				setchapterinfo(chInfo);
-				chapterinfoRef.current = chInfo;
-				setVerses(
-					azVerses.map((v, i) => ({ ...v, text_ar: arVerses[i].text })),
-				);
-				setAudios(
-					azVerses.map((v) => ({
-						audio: everyayahUrl(subfolder, numId, v.verse),
-					})),
-				);
-			} catch (error) {
-				console.error(error);
-			} finally {
-				setLoading(false);
-			}
-		};
-		loadDatas();
-	}, [id, settings.reciterSubfolder]);
 
 	useEffect(() => {
 		if (!verses.length) return;

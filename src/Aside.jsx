@@ -1,10 +1,8 @@
 import DigitalClock from "./DigitalClock";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { month_names, hijri_months, days, cities } from "./helper";
 import { Link, useLocation } from "react-router-dom";
-
-const todayDate = new Date();
-const TODAY_KEY = `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`;
+import { usePrayerTimes } from "./hooks/usePrayerTimes";
 
 const Aside = () => {
 	const location = useLocation();
@@ -16,76 +14,46 @@ const Aside = () => {
 			return null;
 		}
 	});
-	const [city, setCity] = useState("");
-	const [praytime, setPraytime] = useState(null);
-	const [gregorian, setGregorian] = useState("");
-	const [hijri, setHijri] = useState("");
-	const [weekday, setWeekday] = useState("");
+	const [city, setCity] = useState(() => localStorage.getItem("selected_city") || "");
 	const [citySearch, setCitySearch] = useState(
 		localStorage.getItem("selected_city") || "",
 	);
 	const [showCityDropdown, setShowCityDropdown] = useState(false);
 	const comboboxRef = useRef(null);
 
-	const applyTimings = (timings) => {
-		setPraytime({
+	const { data: prayerData } = usePrayerTimes(city);
+
+	const praytime = useMemo(() => {
+		if (!prayerData) return null;
+		const { timings } = prayerData;
+		return {
 			fajr: timings.Fajr.slice(0, 5),
 			sunrise: timings.Sunrise.slice(0, 5),
 			dhuhr: timings.Dhuhr.slice(0, 5),
 			asr: timings.Asr.slice(0, 5),
 			maghrib: timings.Maghrib.slice(0, 5),
 			isha: timings.Isha.slice(0, 5),
-		});
-	};
+		};
+	}, [prayerData]);
 
-	const applyDate = (hijriData) => {
+	const gregorian = useMemo(() => {
 		const d = new Date();
-		setGregorian(
-			`${d.getDate()} ${month_names[d.getMonth()]} ${d.getFullYear()}`,
-		);
-		setWeekday(days[d.getDay()]);
-		if (hijriData) {
-			setHijri(
-				`${hijriData.day} ${hijri_months[hijriData.month.number - 1]} ${hijriData.year}`,
-			);
-		}
-	};
-
-	const fetchPrayTimeByCity = async (cityName) => {
-		try {
-			const cacheKey = `praytime_${cityName}_${TODAY_KEY}`;
-			const cached = localStorage.getItem(cacheKey);
-			if (cached) {
-				const { timings, hijri: h } = JSON.parse(cached);
-				applyTimings(timings);
-				applyDate(h);
-				setCity(cityName);
-				setCitySearch(cityName);
-				return;
-			}
-			const res = await fetch(
-				`https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(cityName)}&country=AZ&method=13`,
-			);
-			const { data } = await res.json();
-			localStorage.setItem(
-				cacheKey,
-				JSON.stringify({ timings: data.timings, hijri: data.date.hijri }),
-			);
-			applyTimings(data.timings);
-			applyDate(data.date.hijri);
-			setCity(cityName);
-			localStorage.setItem("selected_city", cityName);
-			setCitySearch(cityName);
-		} catch (err) {
-			console.error(err);
-		}
-	};
-
-	useEffect(() => {
-		applyDate(null);
-		const savedCity = localStorage.getItem("selected_city");
-		if (savedCity) fetchPrayTimeByCity(savedCity);
+		return `${d.getDate()} ${month_names[d.getMonth()]} ${d.getFullYear()}`;
 	}, []);
+
+	const weekday = useMemo(() => days[new Date().getDay()], []);
+
+	const hijri = useMemo(() => {
+		const hijriData = prayerData?.hijri;
+		if (!hijriData) return "";
+		return `${hijriData.day} ${hijri_months[hijriData.month.number - 1]} ${hijriData.year}`;
+	}, [prayerData]);
+
+	const selectCity = (cityName) => {
+		setCity(cityName);
+		setCitySearch(cityName);
+		localStorage.setItem("selected_city", cityName);
+	};
 
 	useEffect(() => {
 		const handler = (e) => {
@@ -121,7 +89,7 @@ const Aside = () => {
 					</Link>
 				</div>
 			)}
-			<h2>Təqvim</h2>
+			<h2 className="text-[var(--light)] text-xl font-bold text-center">Təqvim</h2>
 			<div className="today">
 				{hijri && (
 					<div className="hijri">
@@ -139,7 +107,7 @@ const Aside = () => {
 			</div>
 
 			<div className="prayer-sticky">
-				<h2>Namaz Vaxtları</h2>
+				<h2 className="text-[var(--light)] text-xl font-bold text-center mb-4">Namaz Vaxtları</h2>
 				<div className="prayer-date">
 					<label>
 						Şəhər seçin:
@@ -168,7 +136,7 @@ const Aside = () => {
 													<li
 														key={i}
 														onMouseDown={() => {
-															fetchPrayTimeByCity(c);
+															selectCity(c);
 															setShowCityDropdown(false);
 														}}
 													>
