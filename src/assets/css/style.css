@@ -190,6 +190,59 @@ nav .settings-btn {
     flex: 0 0 36px;
 }
 
+nav .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0 24px;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+nav .nav-links-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--light);
+    font-size: 15px;
+    white-space: nowrap;
+}
+
+nav .nav-links-item.disabled {
+    color: rgba(228, 226, 219, .45);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.badge-soon {
+    background-color: var(--accent);
+    color: var(--light);
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 100vmax;
+}
+
+nav .menu-toggle {
+    display: none;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    border-radius: 100vmax;
+    transition: background-color .2s var(--ease);
+}
+
+nav .menu-toggle:hover {
+    background-color: rgba(228, 226, 219, .15);
+}
+
 /* ─── Daily verse ─────────────────────────── */
 .daily-verse {
     position: sticky;
@@ -1008,6 +1061,39 @@ footer h4 i {
         width: 34px;
         height: 34px;
         flex-basis: 34px;
+    }
+
+    nav {
+        position: relative;
+    }
+
+    nav .menu-toggle {
+        display: flex;
+    }
+
+    nav .nav-links {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        background-color: var(--primary);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, .28);
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height .25s var(--ease), opacity .2s var(--ease), visibility .25s;
+    }
+
+    nav .nav-links.open {
+        max-height: 200px;
+        opacity: 1;
+        visibility: visible;
+        padding: 6px 14px 14px;
     }
 
     .daily-verse {

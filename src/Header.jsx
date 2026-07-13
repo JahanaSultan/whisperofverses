@@ -1,9 +1,11 @@
 import {
 	ArrowRight,
+	Menu,
 	MessageSquareText,
 	MoveRight,
 	Search,
 	Settings,
+	X,
 } from "lucide-react";
 import logo from "./assets/img/logo.png";
 import { useState } from "react";
@@ -12,6 +14,7 @@ import { useRandomVerse } from "./hooks/useRandomVerse";
 
 const Header = () => {
 	const [search, setSearch] = useState("");
+	const [menuOpen, setMenuOpen] = useState(false);
 	const verse = useRandomVerse();
 	const navigate = useNavigate();
 
@@ -27,13 +30,25 @@ const Header = () => {
 
 	return (
 		<>
-			<nav className="padding-x">
+			<nav className="padding-x flex items-center justify-between">
 				<Link to="/">
 					<div className="logo">
 						<img src={logo} alt="WoV logo" />
 						<h1>WoV</h1>
 					</div>
 				</Link>
+
+				<ul className={`nav-links${menuOpen ? " open" : ""}`}>
+					<li className="nav-links-item disabled" aria-disabled="true">
+						Əsmaul Husna
+						<span className="badge-soon">Tezliklə</span>
+					</li>
+					<li className="nav-links-item disabled" aria-disabled="true">
+						Blog
+						<span className="badge-soon">Tezliklə</span>
+					</li>
+				</ul>
+
 				<div className="header-actions">
 					<div className="search">
 						<input
@@ -54,6 +69,19 @@ const Header = () => {
 					>
 						<Settings size={20} color="var(--light)" />
 					</Link>
+					<button
+						type="button"
+						className="menu-toggle"
+						aria-label={menuOpen ? "Menyunu bağla" : "Menyunu aç"}
+						aria-expanded={menuOpen}
+						onClick={() => setMenuOpen((open) => !open)}
+					>
+						{menuOpen ? (
+							<X size={22} color="var(--light)" />
+						) : (
+							<Menu size={22} color="var(--light)" />
+						)}
+					</button>
 				</div>
 			</nav>
 			<div className="daily-verse padding-x flex flex-col items-center gap-2">
